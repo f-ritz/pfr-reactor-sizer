@@ -328,3 +328,92 @@ def solve_pfr_adiabatic(
         success=success,
         message=msg,
     )
+
+
+# =============================================================================
+# Heat duty calculation (for isothermal reactors) + unified solver
+# =============================================================================
+
+def _compute_heat_duty_profiles(
+    V: list[float],
+    r: list[float],
+    delta_H: float,
+) -> tuple[list[float], float]:
+    """
+    Given reaction rate profile and heat of reaction, compute cumulative heat duty.
+
+    For isothermal operation:
+        q_vol = r * delta_H     (W / m³)
+    Total Q(V) = ∫ q_vol dV   (W)
+    Negative total_Q → heat must be removed to stay isothermal.
+    """
+    if not V or not r or delta_H is None:
+        return [0.0] * len(V or []), 0.0
+
+    V_arr = np.asarray(V, dtype=float)
+    r_arr = np.asarray(r, dtype=float)
+    q_vol = r_arr * delta_H
+
+    if len(V_arr) < 2:
+        Q = np.zeros_like(V_arr)
+    else:
+        dQ = np.zeros_like(V_arr)
+        for i in range(1, len(V_arr)):
+            # numpy.trapz deprecated in 2.x; use trapezoid or manual
+            try:
+                dQ[i] = np.trapezoid(q_vol[i-1:i+1], V_arr[i-1:i+1])
+            except AttributeError:
+                # Fallback manual trapezoidal for older numpy
+                dQ[i] = (q_vol[i] + q_vol[i-1]) * (V_arr[i] - V_arr[i-1]) / 2.0
+        Q = np.cumsum(dQ)
+
+    total_Q = float(Q[-1]) if len(Q) > 0 else 0.0
+    return Q.tolist(), total_Q
+
+
+def solve_pfr(
+    reaction: Reaction,
+    feed: Feed,
+    Cp: Optional[Dict[str, float]] = None,
+    config: Optional[PFRConfig] = None,
+) -> PFRResult:
+    """
+    Recommended unified entry point.
+
+    Supports:
+      - Adiabatic: full T profile (requires Cp)
+      - Isothermal: fixed T, automatically computes required heat duty Q (W)
+        that must be supplied/removed to keep temperature constant.
+    """
+    if config is None:
+        config = PFRConfig()
+
+    delta_H = getattr(reaction, "delta_H", 0.0) or 0.0
+
+    if config.mode == "adiabatic":
+        if not Cp:
+            raise ValueError("Cp dictionary is required for adiabatic simulations")
+        result = solve_pfr_adiabatic(reaction, feed, Cp, config)
+        result.Q = [0.0] * len(result.V)
+        result.total_Q = 0.0
+        return result
+
+    # Isothermal
+    result = solve_pfr_isothermal(reaction, feed, config)
+
+    T_iso = config.isothermal_T if config.isothermal_T is not None else feed.T0
+    result.T = [T_iso] * len(result.T) if result.T else [T_iso]
+    result.final_T = T_iso
+
+    Q_profile, total_Q = _compute_heat_duty_profiles(result.V, result.r, delta_H)
+    result.Q = Q_profile
+    result.total_Q = total_Q
+
+    if abs(total_Q) > 1e-6:
+        duty_type = "heat removal (cooling required)" if total_Q < 0 else "heat addition (heating required)"
+        result.message = (result.message or "") + f" | Heat duty: {abs(total_Q):.2f} W ({duty_type})"
+    else:
+        result.message = (result.message or "") + " | Isothermal (negligible heat effect)"
+
+    return result
+

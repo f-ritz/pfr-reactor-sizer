@@ -4,7 +4,9 @@ Data models for PFR reactor design.
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Literal
+from typing import Dict, Optional, Literal, Any
+
+from .components import Component, compute_delta_H as _compute_delta_H_from_components
 
 
 @dataclass
@@ -63,6 +65,10 @@ class Reaction:
         """Return species generation rates r_j = nu_j * r"""
         return {sp: nu * r for sp, nu in self.stoichiometry.items()}
 
+    def compute_delta_H_from_Hf(self, components: Dict[str, Component]) -> Optional[float]:
+        """Compute delta_H using component heats of formation if all are available."""
+        return _compute_delta_H_from_components(components, self.stoichiometry)
+
 
 @dataclass
 class Feed:
@@ -98,26 +104,28 @@ class PFRConfig:
     Configuration and operating conditions for the PFR simulation.
 
     mode:
-        - 'isothermal': Constant T = T0
-        - 'adiabatic': Energy balance integrated, no heat transfer (Ua=0)
+        - 'isothermal': Temperature is held constant (T = isothermal_T or feed.T0).
+                        The solver will compute the heat duty (Q) required to maintain isothermality.
+        - 'adiabatic': No heat transfer. Energy balance is integrated → temperature profile.
+
+    isothermal_T: If mode='isothermal' and this is set, the reactor runs at this fixed temperature (K).
+                  Otherwise feed.T0 is used.
 
     pressure_model:
         - 'constant': P = P0 always (default for many homogeneous PFRs)
         - 'simple_drop': Uses dP/dV = -alpha * (volumetric flow ratio) * (P0/P) etc.
 
-    alpha: Pressure drop parameter (1/m^6 or appropriate units).
-           When pressure_model='simple_drop', used in d(y)/dV formulation.
-           Typical values depend on reactor (packed vs empty tube). Start with 0 for no drop.
+    alpha: Pressure drop parameter. See solvers for formulation. 0 = no drop.
 
     target_X: If provided and >0, integrate until limiting reactant reaches this conversion.
     max_V: Hard upper limit on volume to integrate (safety). m^3
 
     cross_sectional_area: A_c = pi*D^2/4 (m^2). Used for superficial velocity reporting.
-                          If None, velocity-related outputs are skipped.
     """
     mode: Literal["isothermal", "adiabatic"] = "isothermal"
+    isothermal_T: Optional[float] = None
     pressure_model: Literal["constant", "simple_drop"] = "constant"
-    alpha: float = 0.0          # Pressure drop param (see solvers for exact formulation)
+    alpha: float = 0.0          # Pressure drop param
 
     target_X: Optional[float] = None
     max_V: float = 10.0         # m^3 upper bound
@@ -125,7 +133,6 @@ class PFRConfig:
     cross_sectional_area: Optional[float] = None  # m^2
 
     R: float = 8.314            # J/mol/K  (gas constant)
-    # For future: heat capacities could be added per species for better energy balance
 
 
 @dataclass
@@ -139,15 +146,17 @@ class PFRResult:
     P: list[float]                  # pressure (Pa)
     F: list[Dict[str, float]]       # molar flows at each point
     r: list[float]                  # reaction rate at each point
-    limiting_species: str
-    config: PFRConfig
-    feed: Feed
-    reaction: Reaction
-    final_V: float
-    final_X: float
-    final_T: float
-    final_P: float
-    success: bool
+    Q: list[float] = field(default_factory=list)   # cumulative heat added to reactor up to V (J/s = W)
+    limiting_species: str = ""
+    config: Optional[PFRConfig] = None
+    feed: Optional[Feed] = None
+    reaction: Optional[Reaction] = None
+    final_V: float = 0.0
+    final_X: float = 0.0
+    final_T: float = 0.0
+    final_P: float = 0.0
+    total_Q: float = 0.0            # total heat duty required for the reactor (W). Negative = heat removed
+    success: bool = False
     message: str = ""
 
     def outlet_flows(self) -> Dict[str, float]:
@@ -162,6 +171,12 @@ class PFRResult:
         T_use = T if T is not None else self.final_T
         P_use = P if P is not None else self.final_P
         return {
-            sp: ideal_gas_concentration(Fi, Ft, T_use, P_use, self.config.R)
+            sp: ideal_gas_concentration(Fi, Ft, T_use, P_use, self.config.R if self.config else 8.314)
             for sp, Fi in self.F[-1].items()
         }
+
+    def heat_duty_summary(self) -> str:
+        if not self.Q:
+            return "No heat duty data (adiabatic or not computed)"
+        sign = "removed" if self.total_Q < 0 else "added"
+        return f"Total heat duty: {abs(self.total_Q):.2f} W ({sign}) to maintain conditions"

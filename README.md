@@ -1,8 +1,56 @@
 # pfr-reactor-sizer
 
-A Python program for **designing and sizing non-catalytic gas-phase plug-flow reactors (PFRs)** under isothermal and adiabatic conditions.
+A complete tool for **designing non-catalytic gas-phase plug-flow reactors (PFRs)**.
 
-## Goals
+**Key features (as requested):**
+- Type **any chemical reaction** (e.g. `C2H4 + H2O -> C2H5OH` or `A + B -> C`)
+- **Automatic lookup** of chemicals in the **PubChem** database (MW, formula, rough Cp)
+- Supply your own kinetics from papers (k0, E, reaction orders, ΔH or Hf)
+- **Isothermal** mode with **automatic heat duty calculation** (how much heat you must add or remove to stay isothermal)
+- **Adiabatic** mode with full temperature profile
+- Full concentration, flow, T, P, X, and heat duty **profiles**
+- Modern **Windows-looking GUI** (Tkinter + ttk)
+- Packageable as a single **.exe** for any Windows PC (no Python required)
+
+## Quick Start (GUI — Recommended)
+
+```bash
+pip install -r requirements.txt
+python -m pfrsizer.gui
+```
+
+Or after `pip install -e .`:
+```bash
+pfrsizer-gui
+```
+
+In the GUI:
+1. Type a reaction string and click **Parse**.
+2. Click **Lookup All in PubChem** (or per-species buttons).
+3. Fill/edit **Cp** and **Hf** (J/mol/K and J/mol) with literature values — PubChem data is only a starting point.
+4. Enter feed molar flows (mol/s), T0, P0.
+5. Enter kinetics (k0, E, ΔH_rx).
+6. Choose **Isothermal** (program will calculate required heat duty) or **Adiabatic**.
+7. Set target conversion and click the big **Calculate** button.
+8. View summary numbers + interactive embedded plots. Export CSV of all profiles.
+
+The GUI stays responsive during the (sometimes slow) PubChem calls and ODE solves. Export CSV of all profiles.
+
+## Building a Standalone Windows EXE
+
+On a Windows machine:
+
+```powershell
+pip install pyinstaller
+python build_exe.py
+```
+
+- Produces `dist/PFR_Reactor_Sizer.exe` (single file, windowed).
+- Can be copied to any other Windows PC — no Python or libraries needed.
+- Size is large (~150-250 MB) because it bundles the full scientific Python stack + matplotlib.
+- Edit `build_exe.py` (or the generated `.spec`) to add an icon.
+
+## Goals (original + expanded)
 
 - Size tubular PFRs (compute required volume for a target conversion)
 - Explore composition, temperature, and pressure profiles along the reactor
@@ -11,20 +59,20 @@ A Python program for **designing and sizing non-catalytic gas-phase plug-flow re
 - Simple pressure drop model (optional)
 - Easy to use from Python or via command line
 
-## Features (current)
+## Features
 
-- Single reactions with arbitrary stoichiometry
-- Power-law kinetics with Arrhenius temperature dependence
-- Ideal gas law for concentrations and volumetric flow
-- Isothermal operation (constant T)
-- Adiabatic energy balance (T changes with conversion and heat of reaction)
-- Optional simple pressure-drop model
-- Target conversion or fixed-volume simulation modes
-- Profile results (Fᵢ(V), X(V), T(V), P(V), r(V))
-- Matplotlib plotting of results
-- Clean CLI with built-in examples
+- Type **any reaction string** (real chemicals or symbolic)
+- **PubChem lookup** for species (MW, formula, basic properties)
+- User-supplied kinetics + thermo from papers
+- **Isothermal** with full **heat duty calculation** (Q in/out required to hold T constant)
+- **Adiabatic** with temperature profile
+- Gas-phase volume change, ideal gas concentrations, optional pressure drop
+- Full profiles + summary
+- Windows Tkinter GUI (looks native) + embedded live plots
+- Export CSV profiles
+- PyInstaller-ready for standalone EXE
 
-## Installation
+## Installation (for development / running from source)
 
 ```bash
 # From the project root

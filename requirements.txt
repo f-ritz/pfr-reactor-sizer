@@ -2,5 +2,12 @@ numpy>=1.24
 scipy>=1.10
 matplotlib>=3.7
 rich>=13.0
-# Optional UI:
+pubchempy>=1.0.4
+requests>=2.28   # pubchempy dependency, explicit for robustness
+# GUI (Tkinter is stdlib on most Python installs)
+# For EXE packaging (run on Windows):
+pyinstaller>=6.0; platform_system == "Windows"
+
+# Optional future UI:
 # streamlit>=1.30
+# customtkinter>=5.0  # nicer modern look if desired later
