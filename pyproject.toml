@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pfrsizer"
+version = "0.1.0"
+description = "Design and sizing tool for non-catalytic gas-phase plug-flow reactors (PFR) under isothermal and adiabatic conditions."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+  {name = "Fritz"}
+]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+cli = ["rich>=13.0"]
+ui = ["streamlit>=1.30"]
+dev = ["pytest", "black", "ruff"]
+
+[project.scripts]
+pfrsizer = "pfrsizer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pfrsizer*"]
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
