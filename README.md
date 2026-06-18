@@ -469,7 +469,7 @@ All derivations follow standard treatments in Fogler, *Elements of Chemical Reac
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
