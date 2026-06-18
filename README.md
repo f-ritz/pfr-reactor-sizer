@@ -47,7 +47,7 @@ pfrsizer-gui
 - Lengths / diameter: m
 - Volume: m³
 - T: K
-- P: Pa (you may type `5` meaning 5 atm — it is auto-converted; other pressures must be full Pa)
+- P: Pa (strict SI only; enter e.g. 101325 for 1 atm)
 - Energies: J/mol and J/(mol·K)
 - E: J/mol
 
