@@ -60,13 +60,15 @@ def plot_profiles(
     ax.set_title("Temperature Profile")
     ax.grid(True, alpha=0.3)
 
-    # 3. Adiabatic Equilibrium Conversion vs Temperature (X_e vs T)
+    # 3. Equilibrium Conversion vs Temperature (X_e vs T)
     # Temperature on X-axis, conversion on Y-axis.
-    # Only for reversible with Kc > 0. This is the equilibrium line limiting achievable X.
+    # Only for reversible with Kc > 0. This is the equilibrium line (at fixed P).
+    # For adiabatic the operating point is also constrained by energy balance.
     ax = axes[ax_idx]
     ax_idx += 1
     if (result.reaction and result.reaction.reversible and
-        result.reaction.Kc is not None and result.reaction.Kc > 0 and result.feed):
+        (result.reaction.Kc0 is not None or (result.reaction.Kc is not None and result.reaction.Kc > 0))
+        and result.feed):
         try:
             T_min = max(100.0, min(result.feed.T0 * 0.6, 200))
             T_max = max(result.feed.T0 * 1.8, result.final_T * 1.2 if result.final_T > result.feed.T0 else result.feed.T0 * 1.8, 800)
@@ -74,7 +76,7 @@ def plot_profiles(
             Xe_vals = []
             P0 = result.feed.P0
             for TT in T_vals:
-                xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction, result.reaction.Kc)
+                xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction)
                 Xe_vals.append(xe)
             ax.plot(T_vals, Xe_vals, "b-", linewidth=2)
             ax.axvline(result.feed.T0, color="gray", linestyle="--", label=f"T0 = {result.feed.T0:.1f} K")

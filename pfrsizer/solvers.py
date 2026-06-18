@@ -227,16 +227,19 @@ def compute_equilibrium_conversion(
     P: float,
     feed: Feed,
     reaction: Reaction,
-    Kc: float,
     R: float = 8.314,
 ) -> float:
     """Compute the equilibrium conversion X_e at a given T and P (assuming constant P).
 
-    Solves for the X where the reversible rate law gives r=0, i.e. fwd = rev / Kc.
-    Only makes sense for reversible reactions with Kc > 0.
-    Uses the same logic as the rate calculation in Reaction.rate.
+    Uses reaction.get_Kc(T) to get temperature-dependent Kc if Kc0/Tr provided (for adiabatic
+    reversible cases per Fogler). Otherwise falls back to fixed Kc.
+    Only makes sense for reversible reactions with valid Kc.
     """
-    if not reaction.reversible or Kc is None or Kc <= 0:
+    if not reaction.reversible:
+        return 0.0
+
+    Kc = reaction.get_Kc(T, R)
+    if Kc is None or Kc <= 0:
         return 0.0
 
     stoich = reaction.stoichiometry
@@ -290,10 +293,13 @@ def compute_equilibrium_conversion(
         xi = brentq(residual, 0.0, xi_max * 0.999)
         X_e = (-xi * lim_nu) / F0_lim if F0_lim > 0 else 0.0
         return max(0.0, min(1.0, X_e))
-    except (ValueError, RuntimeError):
+    except (ValueError, RuntimeError, OverflowError, ZeroDivisionError):
         # No root in interval; check boundaries
-        if residual(0.0) <= 0:
-            return 0.0
+        try:
+            if residual(0.0) <= 0:
+                return 0.0
+        except:
+            pass
         return 1.0
 
 
@@ -426,7 +432,6 @@ def solve_pfr_isothermal(
     )
 
     result = _reconstruct_profiles(sol, species_order, integrate_T, integrate_P, feed, config, reaction, limiting, F0_lim)
-    result.Cp = Cp
     return result
 
 

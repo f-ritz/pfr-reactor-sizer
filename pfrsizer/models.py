@@ -36,10 +36,10 @@ class Reaction:
                 If None, uses |stoich coeff| for reactants only (sensible default).
                 Example: {'A': 1, 'B': 0.5}
         name: Optional label for the reaction.
-        reversible: If True, rate includes reverse term using Kc.
-        Kc: Concentration equilibrium constant (Kc) in (mol/m^3)^(delta_nu) units consistent
-            with concentrations in mol/m^3. Used only if reversible=True.
-            For delta_nu=0 it is dimensionless. Provide at the relevant T.
+        reversible: If True, rate includes reverse term using Kc(T).
+        Kc: Fixed Kc (backward compat).
+        Kc0, Tr: If Kc0 set, Kc(T) = Kc0 * exp[-(ΔH/R)*(1/T-1/Tr)] (Fogler ex 11-3 style for reversible adiabatic).
+                 delta_H must be provided. Tr defaults to 298.15 K.
     """
     stoichiometry: Dict[str, float]
     k0: float
@@ -48,7 +48,9 @@ class Reaction:
     orders: Optional[Dict[str, float]] = None
     name: str = "rxn"
     reversible: bool = False
-    Kc: Optional[float] = None
+    Kc: Optional[float] = None          # fixed Kc (backward compat)
+    Kc0: Optional[float] = None         # Kc at reference temperature Tr (for Kc(T))
+    Tr: float = 298.15                  # reference temperature (K) for Kc0
 
     def __post_init__(self):
         if not self.stoichiometry:
@@ -90,7 +92,8 @@ class Reaction:
             conc = max(C.get(sp, 0.0), 0.0)
             fwd *= pow(conc, ord_)
 
-        if not self.reversible or self.Kc is None or self.Kc <= 0:
+        Kc = self.get_Kc(T, R)
+        if not self.reversible or Kc is None or Kc <= 0:
             return k * fwd
 
         # Reverse term: use product stoichiometric magnitudes as reverse orders (elementary-like)
@@ -104,7 +107,25 @@ class Reaction:
             conc = max(C.get(sp, 0.0), 0.0)
             rev *= pow(conc, ord_)
 
-        return k * (fwd - rev / max(self.Kc, 1e-30))
+        return k * (fwd - rev / max(Kc, 1e-30))
+
+    def get_Kc(self, T: float, R: float = 8.314) -> Optional[float]:
+        """Return Kc at temperature T.
+
+        If Kc0 and Tr are set (Kc(T) mode for Fogler-style reversible adiabatic),
+        use van't Hoff:
+            Kc(T) = Kc0 * exp[ (ΔH_rx / R) * (1/T - 1/Tr) ]
+        Otherwise fall back to fixed self.Kc.
+        """
+        if self.Kc0 is not None:
+            Tr = self.Tr if self.Tr is not None else 298.15
+            if abs(self.delta_H) < 1e-12:
+                return self.Kc0
+            arg = (self.delta_H / R) * (1.0 / T - 1.0 / Tr)
+            # Prevent overflow/underflow in exp
+            arg = max(min(arg, 700.0), -700.0)
+            return self.Kc0 * math.exp(arg)
+        return self.Kc
 
     def extent_rates(self, r: float) -> Dict[str, float]:
         """Return species generation rates r_j = nu_j * r"""

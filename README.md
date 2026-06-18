@@ -59,7 +59,7 @@ The GUI displays a bright warning banner and labels reinforce the units.
 3. Click **Lookup All (PubChem + NIST)** — then review/override Cp and Hf with good literature values.
 4. Optionally add extra inert species with the "Add extra (inert)" control and set their feed flows.
 5. Choose **Kinetics model**: Arrhenius or Given constant k.
-6. For reversible reactions, check the box and supply Kc.
+6. For reversible reactions, check the box and supply Kc0 (at Tr) and Tr (K). ΔH_rx is also required for Kc(T). The GUI will show the X_e vs T equilibrium curve (T on x-axis, X_e on y-axis).
 7. Select **Isothermal** or **Adiabatic** — only the fields needed for that mode are shown.
 8. Choose pressure drop option (no drop vs calculate detailed).
 9. Fill feed conditions (T0, P0), target X, diameter, safety max length.
@@ -99,7 +99,11 @@ python build_exe.py
 - **Kinetics flexibility**:
   - Arrhenius form (k0 + activation energy E)
   - Constant-k mode (user provides the value of k at the operating temperature)
-- **Reversible reactions** with user-provided concentration equilibrium constant Kc
+- **Reversible reactions**: enter Kc0 (at reference Tr in K) for temperature-dependent Kc via van't Hoff (Fogler ex. 11-3 style):
+  ```
+  Kc(T) = Kc0 × exp[(ΔH_rx / R) × (1/T - 1/Tr)]
+  ```
+  Includes dedicated "Equilibrium Conversion vs T" plot (T on x-axis, X_e on y-axis). Works for both isothermal and adiabatic.
 - **Dual database lookup**: PubChem (MW, identity) + NIST Chemistry Webbook (enthalpies of formation, heat capacities)
 - **Inert / diluent support**: add any number of extra non-reacting species to the feed; automatically included in mole balances, volume change, and energy balance
 - **Operating mode**:
@@ -112,8 +116,9 @@ python build_exe.py
 - **Geometry**: specify diameter (m); length and volume are computed from the design equation integration
 - **Design equation basis**: all equations follow standard mole and energy balances in Fogler (dF_i/dz = ν_i r A_c, energy balance, ideal-gas variable-density flow)
 - **Parameter help**: in-app "Design Equations Help" window explains the origin and units of every field
-- Full profile plots in GUI: X(z), T(z), T(X), F_i(z), r(z) + export (CSV of z, V, X, T, P, all F_i, r)
+- Full profile plots in GUI: X(z), T(z), T vs X (energy balance), molar flows, rate + for reversible: X_e vs T (equilibrium conversion vs temperature, T on x, X_e on y) + CSV export
 - "Clear All Inputs" button to reset the form
+- Validation errors for missing required data (e.g., Cp for adiabatic)
 - Professional Windows GUI with live status, threading for long operations
 - Completely self-contained EXE distributable
 
@@ -256,7 +261,8 @@ The GUI shows a permanent warning banner and labels on every field.
 | E (activation energy)       | J/mol                 |
 | k0 / given k                | depends on order      |
 | α (pressure drop parameter) | 1/m                   |
-| Kc (reversible)             | (mol/m³)^(Δν)         |
+| Kc (reversible)             | (mol/m³)^(Δν) via Kc0 at Tr | temperature-dependent using van't Hoff with ΔH_rx |
+
 
 R = 8.314 J mol⁻¹ K⁻¹ (fixed).
 
@@ -358,16 +364,102 @@ ruff check .
 black .
 ```
 
-## Design Equation Summary (see in-app Help for full details)
+## Design Equations
 
-- Mole balance (length basis): `dF_i / dz = ν_i * r * A_c`
-- Ideal gas variable volume: `v = v0 * (Ft/Ft0)*(T/T0)*(P0/P)`
-- Adiabatic energy: `Σ Fj Cpj * dT/dz = -r * ΔH * Ac` → produces linear T(X) for constant Cp/ΔH
-- Isothermal heat duty obtained by post-integration of `Q = ∫ r ΔH dV`
-- Pressure drop (detailed): integrated with the α model above
-- GUI includes dedicated "T vs Conversion" plot
+The program is based on the standard plug-flow reactor design equations (mole and energy balances) from Fogler, *Elements of Chemical Reaction Engineering* (primarily Chapters 1–4, 8, 11–12). The independent variable is reactor **length z (m)** (not volume directly). Volume is computed as:
 
-All derivations match standard textbook treatments (Fogler Ch. 1–4, 11–12).
+```
+V = A_c × z
+A_c = π D² / 4
+```
+
+### 1. Mole Balance (Design Equation)
+```
+dF_i / dz = ν_i · r · A_c
+```
+- `F_i`: molar flow rate of species i (mol/s)
+- `ν_i`: stoichiometric coefficient (negative for reactants)
+- `r`: reaction rate (mol/m³/s)
+- `A_c`: cross-sectional area (m²)
+
+This is equivalent to the volume form `dF_i / dV = ν_i · r` via `dV = A_c dz`.
+
+### 2. Concentrations and Volumetric Flow (Ideal Gas, Variable Density)
+```
+v = v0 · (F_T / F_T0) · (T / T0) · (P0 / P)
+C_i = F_i / v
+```
+or equivalently:
+```
+C_i = y_i · P / (R T)     where y_i = F_i / F_T
+```
+- `v`: volumetric flow rate (m³/s)
+- `F_T`: total molar flow rate
+- `y_i`: mole fraction
+- `R = 8.314` J/mol·K
+
+### 3. Reaction Rate Law
+**Arrhenius (or constant k)**:
+```
+k(T) = k0 · exp(−E / (R T))     (or constant k if E = 0 or "given k" mode)
+```
+
+**Irreversible power-law**:
+```
+r = k(T) · ∏ C_j^{order_j}     (over reactants)
+```
+
+**Reversible** (when enabled):
+```
+r = k(T) · (fwd − rev / Kc(T))
+```
+where `fwd` uses reactant terms and `rev` uses product terms (default orders = |ν|).
+
+### 4. Equilibrium Constant Kc(T) (Reversible Reactions)
+```
+Kc(T) = Kc0 · exp[(ΔH_rx / R) · (1/T − 1/Tr)]
+```
+- Enter `Kc0` (at reference temperature `Tr`) + `ΔH_rx` (van't Hoff integration, constant ΔH assumption).
+- Used to compute equilibrium conversion `X_e(T)` and net rate.
+- The GUI plots **X_e vs T** (T on x-axis, X_e on y-axis) for reversible cases.
+
+### 5. Energy Balance
+**Isothermal** (T = constant):
+```
+Q = ∫_0^V r · ΔH_rx dV
+```
+(Heat duty required to hold temperature constant; positive = heat added.)
+
+**Adiabatic** (Q = 0):
+```
+Σ (F_j Cp_j) dT/dz = − r · ΔH_rx · A_c
+```
+- For constant Cp and ΔH, this integrates to a **linear T(X)** relationship (the adiabatic operating/energy balance line):
+  ```
+  T(X) ≈ T0 + X · (−ΔH_rx · F_{A0} / Σ F_{j0} Cp_j)
+  ```
+- The GUI plots **T vs X** (shows both the simulated path and the theoretical energy balance line). x-axis always runs to X = 1.
+- Inerts contribute to the heat capacity flow `Σ F_j Cp_j`.
+
+### 6. Pressure Drop (Detailed Mode)
+```
+dP/dz = −α · (F_T / F_T0) · (T / T0) · (P0 / P)
+```
+- α is a user-supplied lumped parameter (1/m).
+- "No pressure drop" keeps P = P0 constant.
+
+### 7. Conversion
+```
+X = 1 − F_lim / F0_lim     (for the limiting reactant)
+```
+
+### Additional Notes
+- All profiles are generated by simultaneously integrating the mole and energy (adiabatic) balances using `scipy.integrate.solve_ivp`.
+- For reversible adiabatic operation, the maximum achievable conversion is limited by the intersection of the energy balance line T(X) and the equilibrium curve X_e(T).
+- Assumptions: ideal gas, constant Cp (unless you override per species), single reaction, power-law kinetics.
+- See the in-app **"Design Equations Help"** button for more details, variable definitions, and Fogler references.
+
+All derivations follow standard treatments in Fogler, *Elements of Chemical Reaction Engineering* (5th ed.).
 
 ## References & Theory
 

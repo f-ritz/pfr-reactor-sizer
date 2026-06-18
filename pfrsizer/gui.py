@@ -95,7 +95,8 @@ class PFRSizerApp:
         self.alpha_var = tk.StringVar(value="0.05")
 
         self.reversible_var = tk.BooleanVar(value=False)
-        self.Kc_var = tk.StringVar(value="")  # Kc for reversible reactions
+        self.Kc0_var = tk.StringVar(value="")  # Kc0 at Tr for Kc(T)  (Fogler ex. 11-3 style)
+        self.Tr_var = tk.StringVar(value="298.15")  # reference T (K) for Kc0
 
         # UI
         self._build_ui()
@@ -295,9 +296,14 @@ class PFRSizerApp:
             command=self._on_reversible_change
         ).grid(row=2, column=0, sticky="w", pady=(4,0))
 
-        ttk.Label(kin_frame, text="Kc (conc. equil. const, mol/m³ units)").grid(row=2, column=1, sticky="w")
-        self.kc_entry = ttk.Entry(kin_frame, textvariable=self.Kc_var, width=14)
-        self.kc_entry.grid(row=2, column=2, columnspan=2, sticky="w")
+        ttk.Label(kin_frame, text="Kc0 (at Tr)").grid(row=2, column=1, sticky="w")
+        self.kc0_entry = ttk.Entry(kin_frame, textvariable=self.Kc0_var, width=10)
+        self.kc0_entry.grid(row=2, column=2, sticky="w")
+
+        ttk.Label(kin_frame, text="Tr (K)").grid(row=2, column=3, sticky="w")
+        self.tr_entry = ttk.Entry(kin_frame, textvariable=self.Tr_var, width=8)
+        self.tr_entry.grid(row=2, column=4, sticky="w")
+        # Note: Kc(T) uses delta_H (must be set for correct van't Hoff in adiabatic rev)
 
         ttk.Label(kin_frame, text="ΔH_rx (J/mol)").grid(row=3, column=0, sticky="w")
         ttk.Entry(kin_frame, textvariable=self.deltaH_var, width=12).grid(row=3, column=1)
@@ -618,15 +624,18 @@ class PFRSizerApp:
             self.k_label.config(text="k0 (or k)")
 
     def _on_reversible_change(self):
-        """Show/hide Kc entry based on reversible flag (#7)."""
+        """Show/hide Kc0/Tr entries based on reversible flag (#7)."""
         if self.reversible_var.get():
-            self.kc_entry.grid()
+            self.kc0_entry.grid()
+            self.tr_entry.grid()
         else:
             try:
-                self.kc_entry.grid_remove()
+                self.kc0_entry.grid_remove()
+                self.tr_entry.grid_remove()
             except Exception:
                 pass
-            self.Kc_var.set("")
+            self.Kc0_var.set("")
+            self.Tr_var.set("298.15")
 
     def _on_mode_change(self):
         """Show only relevant fields for isothermal vs adiabatic (#2)."""
@@ -671,7 +680,8 @@ class PFRSizerApp:
         self.deltaH_var.set("0.0")
         self.orders_var.set("A:1")
         self.reversible_var.set(False)
-        self.Kc_var.set("")
+        self.Kc0_var.set("")
+        self.Tr_var.set("298.15")
         self._on_reversible_change()
 
         self.T0_var.set("350.0")
@@ -716,7 +726,8 @@ class PFRSizerApp:
         self.deltaH_var.set("-46000")  # approx exothermic J/mol
         self.orders_var.set("C2H4:1 H2O:0")
         self.reversible_var.set(False)
-        self.Kc_var.set("")
+        self.Kc0_var.set("")
+        self.Tr_var.set("298.15")
         self._on_reversible_change()
 
         self.T0_var.set("500.0")   # K ~227 C
@@ -771,16 +782,23 @@ class PFRSizerApp:
                 k, v = pair.split(":", 1)
                 orders[k.strip()] = float(v)
 
-        # Reversible handling (#7)
+        # Reversible handling (#7) - support Kc(T) via Kc0 at Tr (Fogler ex. 11-3)
         rev = self.reversible_var.get()
-        kc = None
+        kc0 = None
+        tr = 298.15
         if rev:
-            kc_text = self.Kc_var.get().strip()
-            if kc_text:
+            kc0_text = self.Kc0_var.get().strip()
+            tr_text = self.Tr_var.get().strip()
+            if kc0_text:
                 try:
-                    kc = float(kc_text)
+                    kc0 = float(kc0_text)
                 except ValueError:
-                    raise ValueError("Invalid Kc value for reversible reaction")
+                    raise ValueError("Invalid Kc0 value for reversible reaction")
+            if tr_text:
+                try:
+                    tr = float(tr_text)
+                except ValueError:
+                    tr = 298.15
 
         rxn = Reaction(
             stoichiometry=stoich,
@@ -790,7 +808,8 @@ class PFRSizerApp:
             orders=orders,
             name=self.reaction_str.get().strip(),
             reversible=rev,
-            Kc=kc,
+            Kc0=kc0,
+            Tr=tr,
         )
 
         # Feed
@@ -954,14 +973,15 @@ class PFRSizerApp:
         ax.set_title("Temperature Profile")
         ax.grid(True, alpha=0.3)
 
-        # Adiabatic Equilibrium Line: X_e vs T (conversion on Y, temperature on X)
-        # Only applicable for reversible reactions with Kc entered.
-        # This is the equilibrium conversion as function of temperature
-        # (at constant P = P0), which limits the achievable X in adiabatic reversible PFR.
+        # Equilibrium Conversion vs Temperature (X_e vs T)
+        # Only applicable for reversible reactions with Kc (or Kc0) entered.
+        # This is the equilibrium line (at constant P=P0). In adiabatic mode the
+        # actual path is further constrained by the energy balance T(X).
         ax = axes[ax_idx]
         ax_idx += 1
         if (result.reaction and result.reaction.reversible and
-            result.reaction.Kc is not None and result.reaction.Kc > 0 and result.feed):
+            (result.reaction.Kc0 is not None or (result.reaction.Kc is not None and result.reaction.Kc > 0))
+            and result.feed):
             try:
                 T_min = max(100.0, min(result.feed.T0 * 0.6, 200))
                 T_max = max(result.feed.T0 * 1.8, result.final_T * 1.2 if result.final_T > result.feed.T0 else result.feed.T0 * 1.8, 800)
@@ -969,7 +989,7 @@ class PFRSizerApp:
                 Xe_vals = []
                 P0 = result.feed.P0
                 for TT in T_vals:
-                    xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction, result.reaction.Kc)
+                    xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction)
                     Xe_vals.append(xe)
                 ax.plot(T_vals, Xe_vals, "b-", linewidth=2)
                 ax.axvline(result.feed.T0, color="gray", ls="--", label=f"T0 = {result.feed.T0:.1f} K")
@@ -1109,7 +1129,8 @@ class PFRSizerApp:
         self.pressure_model_var.set("none")
         self.alpha_var.set("0.05")
         self.reversible_var.set(False)
-        self.Kc_var.set("")
+        self.Kc0_var.set("")
+        self.Tr_var.set("298.15")
         self.extra_species_var.set("")
 
         # Force no stale old feed values so rebuild uses clean defaults
@@ -1166,8 +1187,10 @@ REACTION RATE (power law):
   If "given constant k" selected: k = user value, E forced = 0 (no T dependence)
   r = k(T) * ∏ C_j ^ order_j     (for irreversible)
   For reversible (when checked):
-     r = k(T) * [ ∏_react (C^o)  −  (1/Kc) * ∏_prod (C^o) ]
-  Kc is user-supplied concentration equilibrium constant at relevant T (units (mol/m³)^Δν )
+     r = k(T) * [ ∏_react (C^o)  −  (1/Kc(T)) * ∏_prod (C^o) ]
+  Kc(T) from Kc0 at Tr using van't Hoff with ΔH (Fogler style, ex. 11-3):
+     Kc(T) = Kc0 * exp[ (ΔH/R) * (1/T - 1/Tr) ]
+  Enter Kc0 and Tr (K) when reversible. X_e(T) plotted when Kc0 set.
 
 ENERGY BALANCE:
   Isothermal mode: T = T0 (or override). Heat duty Q required is computed as:
