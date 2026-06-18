@@ -64,7 +64,7 @@ The GUI displays a bright warning banner and labels reinforce the units.
 8. Choose pressure drop option (no drop vs calculate detailed).
 9. Fill feed conditions (T0, P0), target X, diameter, safety max length.
 10. Click **▶ Calculate / Size Reactor** (or Ctrl+Enter).
-11. Review summary + plots. Export CSV or PNG.
+11. Review summary + plots (including the new T vs X graph, especially useful for adiabatic cases). Export CSV or PNG.
 
 The GUI remains responsive during network lookups and ODE integration.
 
@@ -112,7 +112,8 @@ python build_exe.py
 - **Geometry**: specify diameter (m); length and volume are computed from the design equation integration
 - **Design equation basis**: all equations follow standard mole and energy balances in Fogler (dF_i/dz = ν_i r A_c, energy balance, ideal-gas variable-density flow)
 - **Parameter help**: in-app "Design Equations Help" window explains the origin and units of every field
-- Full profile plots + export (CSV of z, V, X, T, P, all F_i, r)
+- Full profile plots in GUI: X(z), T(z), T(X), F_i(z), r(z) + export (CSV of z, V, X, T, P, all F_i, r)
+- "Clear All Inputs" button to reset the form
 - Professional Windows GUI with live status, threading for long operations
 - Completely self-contained EXE distributable
 
@@ -143,7 +144,7 @@ pfrsizer example pressure_drop
 
 ```python
 from pfrsizer import Reaction, Feed, PFRConfig
-from pfrsizer.solvers import solve_pfr_isothermal, solve_pfr_adiabatic
+from pfrsizer.solvers import solve_pfr
 from pfrsizer.plot import plot_profiles
 
 # 1. Define the reaction: A -> B   (first order)
@@ -166,12 +167,13 @@ feed = Feed(
 # 3. Configuration
 cfg = PFRConfig(
     target_X=0.80,            # stop at 80% conversion
-    max_V=50.0,               # safety upper bound (m^3)
+    max_L=50.0,               # safety upper bound on length (m)
+    diameter=0.1,             # m
     pressure_model="constant",
 )
 
-# 4. Solve
-result = solve_pfr_isothermal(rxn, feed, cfg)
+# 4. Solve (unified entry point)
+result = solve_pfr(rxn, feed, config=cfg)
 
 print("Required volume:", round(result.final_V, 5), "m³")
 print("Final conversion:", round(result.final_X, 4))
@@ -194,8 +196,8 @@ rxn = Reaction(
 feed = Feed(F0={"A": 1.0, "Inert": 0.4}, T0=330.0, P0=3*101325)
 Cp = {"A": 115.0, "B": 82.0, "Inert": 29.5}   # J / mol / K
 
-cfg = PFRConfig(mode="adiabatic", target_X=0.8, max_V=4.0)
-result = solve_pfr_adiabatic(rxn, feed, Cp, cfg)
+cfg = PFRConfig(mode="adiabatic", target_X=0.8, max_L=4.0, diameter=0.1)
+result = solve_pfr(rxn, feed, Cp=Cp, config=cfg)
 
 print("Outlet T:", round(result.final_T, 1), "K")
 plot_profiles(result)
@@ -203,10 +205,10 @@ plot_profiles(result)
 
 ## How It Works
 
-The program integrates the **design equation** (mole balance) along reactor volume V:
+The program integrates the **design equation** (mole balance) along reactor **length z** (m), where volume V = A_c × z and A_c = πD²/4:
 
 ```
-dFⱼ / dV = νⱼ · r
+dFⱼ / dz = νⱼ · r · A_c
 ```
 
 For gas phase, concentrations are obtained via the ideal gas law:
@@ -217,20 +219,22 @@ Cⱼ = yⱼ · P / (R T)
 
 Volumetric flow (and thus concentrations) changes with total moles, temperature, and pressure.
 
-**Isothermal**: T = T₀ (constant)
+**Isothermal**: T = T₀ (constant). Heat duty Q is computed by integrating the energy term.
 
 **Adiabatic** (no heat exchange):
 
 ```
-Σ(Fⱼ Cpⱼ) dT/dV = -r · ΔH_rx
+Σ(Fⱼ Cpⱼ) dT/dz = −r · ΔH_rx · A_c
 ```
+
+For constant Cp and ΔH, this produces a **linear T(X)** relationship (the adiabatic operating line). Temperature vs. Conversion (T vs X) is plotted in the GUI.
 
 Pressure drop:
 
 - **No pressure drop** → P = P0 constant (recommended for many lab-scale / low ΔP cases)
 - **Detailed pressure drop** → integrates dP/dz = −α × (F_T/F_T0) × (T/T0) × (P0/P)
 
-α is a user-supplied lumped parameter (units 1/m). For packed beds you can derive α from the Ergun equation. The integration uses length z as the independent variable, so concentration changes from pressure are captured.
+α is a user-supplied lumped parameter (units 1/m). For packed beds you can derive α from the Ergun equation. The integration uses length z as the independent variable, so concentration changes from pressure are captured. The GUI includes a "T vs Conversion" plot that shows the energy balance line.
 
 ## Units — CRITICAL (Strict SI Only)
 
@@ -358,9 +362,10 @@ black .
 
 - Mole balance (length basis): `dF_i / dz = ν_i * r * A_c`
 - Ideal gas variable volume: `v = v0 * (Ft/Ft0)*(T/T0)*(P0/P)`
-- Adiabatic energy: `Σ Fj Cpj * dT/dz = -r * ΔH * Ac`
+- Adiabatic energy: `Σ Fj Cpj * dT/dz = -r * ΔH * Ac` → produces linear T(X) for constant Cp/ΔH
 - Isothermal heat duty obtained by post-integration of `Q = ∫ r ΔH dV`
 - Pressure drop (detailed): integrated with the α model above
+- GUI includes dedicated "T vs Conversion" plot
 
 All derivations match standard textbook treatments (Fogler Ch. 1–4, 11–12).
 

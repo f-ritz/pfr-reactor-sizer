@@ -966,6 +966,7 @@ class PFRSizerApp:
         ax.set_xlabel("X")
         ax.set_ylabel("T (K)")
         ax.set_title("T vs Conversion")
+        ax.set_xlim(0, 1)
         ax.grid(True, alpha=0.3)
 
         # Molar flows

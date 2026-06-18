@@ -71,6 +71,7 @@ def plot_profiles(
     ax.set_xlabel("X")
     ax.set_ylabel("T (K)")
     ax.set_title("Temperature vs Conversion")
+    ax.set_xlim(0, 1)
     ax.grid(True, alpha=0.3)
 
     # 4. Pressure (if enabled)
