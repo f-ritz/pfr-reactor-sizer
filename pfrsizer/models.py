@@ -234,6 +234,7 @@ class PFRResult:
     config: Optional[PFRConfig] = None
     feed: Optional[Feed] = None
     reaction: Optional[Reaction] = None
+    Cp: Optional[Dict[str, float]] = None  # heat capacities used for adiabatic energy balance
     final_z: float = 0.0
     final_V: float = 0.0
     final_X: float = 0.0

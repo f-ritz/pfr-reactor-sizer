@@ -31,6 +31,7 @@ Pressure drop:
 from __future__ import annotations
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.optimize import brentq
 from typing import Dict, List, Tuple, Optional, Callable
 from dataclasses import replace
 
@@ -221,6 +222,81 @@ def _make_low_rate_event(
     return event
 
 
+def compute_equilibrium_conversion(
+    T: float,
+    P: float,
+    feed: Feed,
+    reaction: Reaction,
+    Kc: float,
+    R: float = 8.314,
+) -> float:
+    """Compute the equilibrium conversion X_e at a given T and P (assuming constant P).
+
+    Solves for the X where the reversible rate law gives r=0, i.e. fwd = rev / Kc.
+    Only makes sense for reversible reactions with Kc > 0.
+    Uses the same logic as the rate calculation in Reaction.rate.
+    """
+    if not reaction.reversible or Kc is None or Kc <= 0:
+        return 0.0
+
+    stoich = reaction.stoichiometry
+    orders = reaction.orders if reaction.orders is not None else {
+        sp: abs(nu) for sp, nu in stoich.items() if nu < 0
+    }
+
+    # Find limiting reactant and max extent xi
+    xi_max = float("inf")
+    F0_lim = 0.0
+    lim_nu = 0.0
+    for sp, nu in stoich.items():
+        if nu < 0:
+            f0 = feed.F0.get(sp, 0.0)
+            if f0 > 0:
+                ratio = f0 / (-nu)
+                if ratio < xi_max:
+                    xi_max = ratio
+                    F0_lim = f0
+                    lim_nu = nu
+
+    if xi_max <= 0:
+        return 0.0
+
+    def residual(xi: float) -> float:
+        F = {sp: feed.F0.get(sp, 0.0) + nu * xi for sp, nu in stoich.items()}
+        Ft = sum(max(f, 0.0) for f in F.values())
+        if Ft < 1e-12 or T <= 0 or P <= 0:
+            return 0.0
+        y = {sp: max(F.get(sp, 0.0), 0.0) / Ft for sp in F}
+        C = {sp: y[sp] * P / (R * T) for sp in y}
+
+        # fwd (reactants)
+        fwd = 1.0
+        for sp, o in orders.items():
+            if stoich.get(sp, 0) >= 0:
+                continue
+            fwd *= max(C.get(sp, 0.0), 0.0) ** o
+
+        # rev (products)
+        rev = 1.0
+        for sp, nu in stoich.items():
+            if nu <= 0:
+                continue
+            o = abs(nu)
+            rev *= max(C.get(sp, 0.0), 0.0) ** o
+
+        return fwd - rev / Kc
+
+    try:
+        xi = brentq(residual, 0.0, xi_max * 0.999)
+        X_e = (-xi * lim_nu) / F0_lim if F0_lim > 0 else 0.0
+        return max(0.0, min(1.0, X_e))
+    except (ValueError, RuntimeError):
+        # No root in interval; check boundaries
+        if residual(0.0) <= 0:
+            return 0.0
+        return 1.0
+
+
 def _reconstruct_profiles(
     sol,
     species_order: List[str],
@@ -349,7 +425,9 @@ def solve_pfr_isothermal(
         max_step=0.02 * config.max_L if config.max_L > 0 else 0.05,
     )
 
-    return _reconstruct_profiles(sol, species_order, integrate_T, integrate_P, feed, config, reaction, limiting, F0_lim)
+    result = _reconstruct_profiles(sol, species_order, integrate_T, integrate_P, feed, config, reaction, limiting, F0_lim)
+    result.Cp = Cp
+    return result
 
 
 def solve_pfr_adiabatic(
@@ -472,6 +550,7 @@ def solve_pfr(
         result = solve_pfr_adiabatic(reaction, feed, Cp, config)
         result.Q = [0.0] * len(result.V)
         result.total_Q = 0.0
+        result.Cp = Cp
         return result
 
     # Isothermal

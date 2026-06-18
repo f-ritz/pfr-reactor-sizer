@@ -50,7 +50,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 
 # Core pfrsizer (use absolute imports so direct execution always works)
 from pfrsizer.models import Reaction, Feed, PFRConfig, PFRResult
-from pfrsizer.solvers import solve_pfr
+from pfrsizer.solvers import solve_pfr, compute_equilibrium_conversion
 from pfrsizer.reaction_parser import parse_reaction, pretty_stoich
 from pfrsizer.pubchem import lookup_species, lookup_species_list
 from pfrsizer.nist_webbook import lookup_nist, lookup_nist_list
@@ -954,20 +954,45 @@ class PFRSizerApp:
         ax.set_title("Temperature Profile")
         ax.grid(True, alpha=0.3)
 
-        # NEW: Temperature as a function of conversion (T vs X)
-        # For adiabatic: should be (approx) straight line per energy balance
-        # For isothermal: horizontal line
+        # Adiabatic Equilibrium Line: X_e vs T (conversion on Y, temperature on X)
+        # Only applicable for reversible reactions with Kc entered.
+        # This is the equilibrium conversion as function of temperature
+        # (at constant P = P0), which limits the achievable X in adiabatic reversible PFR.
         ax = axes[ax_idx]
         ax_idx += 1
-        ax.plot(result.X, result.T, "g-", linewidth=2)
-        if result.feed:
-            ax.axhline(result.feed.T0, color="gray", ls="--", label=f"T0={result.feed.T0:.1f}")
-            ax.legend(fontsize=8)
-        ax.set_xlabel("X")
-        ax.set_ylabel("T (K)")
-        ax.set_title("T vs Conversion")
-        ax.set_xlim(0, 1)
-        ax.grid(True, alpha=0.3)
+        if (result.reaction and result.reaction.reversible and
+            result.reaction.Kc is not None and result.reaction.Kc > 0 and result.feed):
+            try:
+                T_min = max(100.0, min(result.feed.T0 * 0.6, 200))
+                T_max = max(result.feed.T0 * 1.8, result.final_T * 1.2 if result.final_T > result.feed.T0 else result.feed.T0 * 1.8, 800)
+                T_vals = np.linspace(T_min, T_max, 100)
+                Xe_vals = []
+                P0 = result.feed.P0
+                for TT in T_vals:
+                    xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction, result.reaction.Kc)
+                    Xe_vals.append(xe)
+                ax.plot(T_vals, Xe_vals, "b-", linewidth=2)
+                ax.axvline(result.feed.T0, color="gray", ls="--", label=f"T0 = {result.feed.T0:.1f} K")
+                ax.set_xlabel("T (K)")
+                ax.set_ylabel("X_e")
+                ax.set_title("Equilibrium Conversion vs T (Kc)")
+                ax.set_ylim(0, 1)
+                ax.legend(fontsize=8)
+                ax.grid(True, alpha=0.3)
+            except Exception:
+                ax.text(0.5, 0.5, "Equilibrium calculation failed", ha="center", va="center", transform=ax.transAxes)
+                ax.set_xlabel("T (K)")
+                ax.set_ylabel("X_e")
+                ax.set_title("Equilibrium X vs T")
+                ax.set_ylim(0, 1)
+                ax.grid(True, alpha=0.3)
+        else:
+            ax.text(0.5, 0.5, "Only for reversible reactions\n(with Kc > 0)", ha="center", va="center", transform=ax.transAxes)
+            ax.set_xlabel("T (K)")
+            ax.set_ylabel("X_e")
+            ax.set_title("Equilibrium Conversion vs T")
+            ax.set_ylim(0, 1)
+            ax.grid(True, alpha=0.3)
 
         # Molar flows
         ax = axes[ax_idx]

@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from .models import PFRResult
+from .solvers import compute_equilibrium_conversion
 
 
 def plot_profiles(
@@ -59,20 +60,44 @@ def plot_profiles(
     ax.set_title("Temperature Profile")
     ax.grid(True, alpha=0.3)
 
-    # 3. NEW: Temperature vs Conversion (T vs X)
-    # For adiabatic: approximately linear (energy balance line)
-    # For isothermal: flat
+    # 3. Adiabatic Equilibrium Conversion vs Temperature (X_e vs T)
+    # Temperature on X-axis, conversion on Y-axis.
+    # Only for reversible with Kc > 0. This is the equilibrium line limiting achievable X.
     ax = axes[ax_idx]
     ax_idx += 1
-    ax.plot(result.X, result.T, "g-", linewidth=2)
-    if result.feed:
-        ax.axhline(result.feed.T0, color="gray", linestyle="--", label=f"T0 = {result.feed.T0:.1f} K")
-        ax.legend(fontsize=8)
-    ax.set_xlabel("X")
-    ax.set_ylabel("T (K)")
-    ax.set_title("Temperature vs Conversion")
-    ax.set_xlim(0, 1)
-    ax.grid(True, alpha=0.3)
+    if (result.reaction and result.reaction.reversible and
+        result.reaction.Kc is not None and result.reaction.Kc > 0 and result.feed):
+        try:
+            T_min = max(100.0, min(result.feed.T0 * 0.6, 200))
+            T_max = max(result.feed.T0 * 1.8, result.final_T * 1.2 if result.final_T > result.feed.T0 else result.feed.T0 * 1.8, 800)
+            T_vals = np.linspace(T_min, T_max, 100)
+            Xe_vals = []
+            P0 = result.feed.P0
+            for TT in T_vals:
+                xe = compute_equilibrium_conversion(TT, P0, result.feed, result.reaction, result.reaction.Kc)
+                Xe_vals.append(xe)
+            ax.plot(T_vals, Xe_vals, "b-", linewidth=2)
+            ax.axvline(result.feed.T0, color="gray", linestyle="--", label=f"T0 = {result.feed.T0:.1f} K")
+            ax.set_xlabel("T (K)")
+            ax.set_ylabel("X_e")
+            ax.set_title("Equilibrium X vs T (Kc)")
+            ax.set_ylim(0, 1)
+            ax.legend(fontsize=8)
+            ax.grid(True, alpha=0.3)
+        except Exception:
+            ax.text(0.5, 0.5, "Equilibrium calc failed", ha="center", va="center", transform=ax.transAxes)
+            ax.set_xlabel("T (K)")
+            ax.set_ylabel("X_e")
+            ax.set_title("Equilibrium X vs T")
+            ax.set_ylim(0, 1)
+            ax.grid(True, alpha=0.3)
+    else:
+        ax.text(0.5, 0.5, "Only for reversible reactions\n(with Kc > 0)", ha="center", va="center", transform=ax.transAxes)
+        ax.set_xlabel("T (K)")
+        ax.set_ylabel("X_e")
+        ax.set_title("Equilibrium Conversion vs T")
+        ax.set_ylim(0, 1)
+        ax.grid(True, alpha=0.3)
 
     # 4. Pressure (if enabled)
     if result.config.pressure_model != "constant":

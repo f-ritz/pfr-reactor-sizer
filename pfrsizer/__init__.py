@@ -9,7 +9,7 @@ PubChem lookup for species properties + Tkinter GUI for Windows EXE distribution
 __version__ = "1.0.0"
 
 from .models import Reaction, Feed, PFRConfig, PFRResult
-from .solvers import solve_pfr_isothermal, solve_pfr_adiabatic, solve_pfr
+from .solvers import solve_pfr_isothermal, solve_pfr_adiabatic, solve_pfr, compute_equilibrium_conversion
 from .core import ideal_gas_concentration, inlet_volumetric_flow, compute_concentrations_from_v
 from .plot import plot_profiles, plot_rate_and_concentrations
 from .pubchem import lookup_species, lookup_species_list
@@ -25,6 +25,7 @@ __all__ = [
     "solve_pfr_isothermal",
     "solve_pfr_adiabatic",
     "solve_pfr",
+    "compute_equilibrium_conversion",
     "ideal_gas_concentration",
     "inlet_volumetric_flow",
     "compute_concentrations_from_v",
