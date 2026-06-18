@@ -1,0 +1,3631 @@
+=== dis.dis(main) ===
+590           RESUME                   0
+
+591           LOAD_GLOBAL              0 (tk)
+              LOAD_ATTR                2 (Tk)
+              PUSH_NULL
+              CALL                     0
+              STORE_FAST               0 (root)
+
+592           LOAD_GLOBAL              5 (PFRSizerApp + NULL)
+              LOAD_FAST                0 (root)
+              CALL                     1
+              STORE_FAST               1 (app)
+
+593           LOAD_FAST                0 (root)
+              LOAD_ATTR                7 (mainloop + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+
+=== PFRSizerApp methods ===
+
+--- _build_ui ---
+ 74           RESUME                   0
+
+ 76           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (root)
+              LOAD_CONST               1 (8)
+              LOAD_CONST               2 (('padding',))
+              CALL_KW                  2
+              STORE_FAST               1 (top)
+
+ 77           LOAD_FAST                1 (top)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST               4 (('fill',))
+              CALL_KW                  1
+              POP_TOP
+
+ 79           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                1 (top)
+              LOAD_CONST               5 ('PFR Reactor Sizer  •  Non-catalytic Gas-Phase Plug Flow Reactor')
+              LOAD_CONST               6 (('Segoe UI', 14, 'bold'))
+              LOAD_CONST               7 (('text', 'font'))
+              CALL_KW                  3
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               8 ('left')
+              LOAD_CONST               9 (('side',))
+              CALL_KW                  1
+              POP_TOP
+
+ 81           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST                1 (top)
+              LOAD_CONST              10 ('▶ Calculate / Size Reactor')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (on_calculate)
+              LOAD_CONST              11 ('Accent.TButton')
+              LOAD_CONST              12 (('text', 'command', 'style'))
+              CALL_KW                  4
+              STORE_FAST               2 (btn_run)
+
+ 82           LOAD_FAST                2 (btn_run)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              13 ('right')
+              LOAD_CONST              14 (6)
+              LOAD_CONST              15 (('side', 'padx'))
+              CALL_KW                  2
+              POP_TOP
+
+ 85           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               14 (PanedWindow)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (root)
+              LOAD_CONST              16 ('horizontal')
+              LOAD_CONST              17 (('orient',))
+              CALL_KW                  2
+              STORE_FAST               3 (main)
+
+ 86           LOAD_FAST                3 (main)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              18 ('both')
+              LOAD_CONST              19 (True)
+              LOAD_CONST               1 (8)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              21 (('fill', 'expand', 'padx', 'pady'))
+              CALL_KW                  4
+              POP_TOP
+
+ 89           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                3 (main)
+              LOAD_CONST              14 (6)
+              LOAD_CONST               2 (('padding',))
+              CALL_KW                  2
+              STORE_FAST               4 (left_frame)
+
+ 90           LOAD_FAST                3 (main)
+              LOAD_ATTR               17 (add + NULL|self)
+              LOAD_FAST                4 (left_frame)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              23 (('weight',))
+              CALL_KW                  2
+              POP_TOP
+
+ 93           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                4 (left_frame)
+              LOAD_CONST              24 ('Reaction')
+              LOAD_CONST               1 (8)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST               5 (rxn_frame)
+
+ 94           LOAD_FAST                5 (rxn_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+ 96           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                5 (rxn_frame)
+              LOAD_CONST              27 ('Reaction string (e.g.  C2H4 + H2O -> C2H5OH   or   A + B -> C )')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+ 98           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              32 ('A -> B')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              13 (reaction_str)
+
+ 99           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST     80 (rxn_frame, self)
+              LOAD_ATTR               26 (reaction_str)
+              LOAD_CONST              34 (55)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              37 ('ew')
+              LOAD_CONST              38 (2)
+              LOAD_CONST              39 (('row', 'column', 'columnspan', 'sticky', 'pady'))
+              CALL_KW                  5
+              POP_TOP
+
+101           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST                5 (rxn_frame)
+              LOAD_CONST              40 ('Parse')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               30 (on_parse_reaction)
+              LOAD_CONST              41 (('text', 'command'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              42 (('row', 'column', 'padx'))
+              CALL_KW                  3
+              POP_TOP
+
+102           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST                5 (rxn_frame)
+              LOAD_CONST              43 ('Lookup All in PubChem')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               32 (on_lookup_all)
+              LOAD_CONST              41 (('text', 'command'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              44 (('row', 'column', 'pady'))
+              CALL_KW                  3
+              POP_TOP
+
+105           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                5 (rxn_frame)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              17 (species_frame)
+
+106           LOAD_FAST                0 (self)
+              LOAD_ATTR               34 (species_frame)
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              37 ('ew')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              39 (('row', 'column', 'columnspan', 'sticky', 'pady'))
+              CALL_KW                  5
+              POP_TOP
+
+108           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                5 (rxn_frame)
+              LOAD_CONST              45 ('Edit Cp and Hf from literature. PubChem gives good MW + rough defaults.')
+              LOAD_CONST              46 (('Segoe UI', 8))
+              LOAD_CONST               7 (('text', 'font'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+111           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                4 (left_frame)
+              LOAD_CONST              47 ('Feed Conditions (molar flow rates)')
+              LOAD_CONST               1 (8)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST               6 (feed_frame)
+
+112           LOAD_FAST                6 (feed_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+114           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                6 (feed_frame)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              18 (feed_frame)
+
+115           LOAD_FAST                0 (self)
+              LOAD_ATTR               36 (feed_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST               4 (('fill',))
+              CALL_KW                  1
+              POP_TOP
+
+117           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                6 (feed_frame)
+              LOAD_CONST              48 ('T0 (K)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              38 (2)
+              LOAD_CONST              49 (('row', 'column', 'sticky', 'padx'))
+              CALL_KW                  4
+              POP_TOP
+
+118           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              50 ('400.0')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              19 (T0_var)
+
+119           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST     96 (feed_frame, self)
+              LOAD_ATTR               38 (T0_var)
+              LOAD_CONST              51 (10)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              42 (('row', 'column', 'padx'))
+              CALL_KW                  3
+              POP_TOP
+
+121           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                6 (feed_frame)
+              LOAD_CONST              52 ('P0 (Pa or atm)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              38 (2)
+              LOAD_CONST              49 (('row', 'column', 'sticky', 'padx'))
+              CALL_KW                  4
+              POP_TOP
+
+122           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              53 ('101325')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              20 (P0_var)
+
+123           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST     96 (feed_frame, self)
+              LOAD_ATTR               40 (P0_var)
+              LOAD_CONST              54 (12)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              42 (('row', 'column', 'padx'))
+              CALL_KW                  3
+              POP_TOP
+
+126           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                4 (left_frame)
+              LOAD_CONST              55 ('Kinetics (power-law, Arrhenius)')
+              LOAD_CONST               1 (8)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST               7 (kin_frame)
+
+127           LOAD_FAST                7 (kin_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+129           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                7 (kin_frame)
+              LOAD_CONST              56 ('k0')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+130           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              58 ('0.05')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              21 (k0_var)
+
+131           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    112 (kin_frame, self)
+              LOAD_ATTR               42 (k0_var)
+              LOAD_CONST              54 (12)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+133           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                7 (kin_frame)
+              LOAD_CONST              59 ('E (J/mol)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+134           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              60 ('0')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              22 (E_var)
+
+135           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    112 (kin_frame, self)
+              LOAD_ATTR               44 (E_var)
+              LOAD_CONST              54 (12)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+137           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                7 (kin_frame)
+              LOAD_CONST              61 ('ΔH_rx (J/mol)   [auto if Hf available]')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+138           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              62 ('-45000')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              23 (deltaH_var)
+
+139           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    112 (kin_frame, self)
+              LOAD_ATTR               46 (deltaH_var)
+              LOAD_CONST              63 (14)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+141           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                7 (kin_frame)
+              LOAD_CONST              64 ('Orders (e.g. A:1  or leave blank for |stoich|)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+142           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              65 ('')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              24 (orders_var)
+
+143           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    112 (kin_frame, self)
+              LOAD_ATTR               48 (orders_var)
+              LOAD_CONST              66 (50)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              37 ('ew')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+146           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                4 (left_frame)
+              LOAD_CONST              67 ('Operating Conditions')
+              LOAD_CONST               1 (8)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST               8 (op_frame)
+
+147           LOAD_FAST                8 (op_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+149           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              68 ('isothermal')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              25 (mode_var)
+
+150           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               52 (Radiobutton)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              69 ('Isothermal (T constant — program calculates required heat duty)')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               50 (mode_var)
+              LOAD_CONST              68 ('isothermal')
+              LOAD_CONST              70 (('text', 'variable', 'value'))
+              CALL_KW                  4
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              71 (('anchor',))
+              CALL_KW                  1
+              POP_TOP
+
+151           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               52 (Radiobutton)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              72 ('Adiabatic (no heat transfer — temperature will change)')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               50 (mode_var)
+              LOAD_CONST              73 ('adiabatic')
+              LOAD_CONST              70 (('text', 'variable', 'value'))
+              CALL_KW                  4
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              71 (('anchor',))
+              CALL_KW                  1
+              POP_TOP
+
+153           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              74 ('Isothermal target T (K, blank = use T0)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              75 (('row', 'column', 'sticky'))
+              CALL_KW                  3
+              POP_TOP
+
+154           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              65 ('')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              27 (iso_T_var)
+
+155           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    128 (op_frame, self)
+              LOAD_ATTR               54 (iso_T_var)
+              LOAD_CONST              54 (12)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              75 (('row', 'column', 'sticky'))
+              CALL_KW                  3
+              POP_TOP
+
+157           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              76 ('Target conversion X (0-1)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              75 (('row', 'column', 'sticky'))
+              CALL_KW                  3
+              POP_TOP
+
+158           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              77 ('0.80')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              28 (targetX_var)
+
+159           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    128 (op_frame, self)
+              LOAD_ATTR               56 (targetX_var)
+              LOAD_CONST              51 (10)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              22 (1)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+161           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              78 ('Max volume safety limit (m³)')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              75 (('row', 'column', 'sticky'))
+              CALL_KW                  3
+              POP_TOP
+
+162           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              79 ('50')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              29 (maxV_var)
+
+163           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    128 (op_frame, self)
+              LOAD_ATTR               58 (maxV_var)
+              LOAD_CONST              51 (10)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+166           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               60 (BooleanVar)
+              PUSH_NULL
+              LOAD_CONST              80 (False)
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              31 (pressure_drop_var)
+
+167           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               64 (Checkbutton)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              81 ('Include simple pressure drop (alpha)')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               62 (pressure_drop_var)
+              LOAD_CONST              82 (('text', 'variable'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              29 (0)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              30 ('w')
+              LOAD_CONST              31 (('row', 'column', 'columnspan', 'sticky'))
+              CALL_KW                  4
+              POP_TOP
+
+168           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                8 (Label)
+              PUSH_NULL
+              LOAD_FAST                8 (op_frame)
+              LOAD_CONST              83 ('alpha')
+              LOAD_CONST              28 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+169           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               24 (StringVar)
+              PUSH_NULL
+              LOAD_CONST              84 ('0.0')
+              LOAD_CONST              33 (('value',))
+              CALL_KW                  1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              33 (alpha_var)
+
+170           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               28 (Entry)
+              PUSH_NULL
+              LOAD_FAST_LOAD_FAST    128 (op_frame, self)
+              LOAD_ATTR               66 (alpha_var)
+              LOAD_CONST              51 (10)
+              LOAD_CONST              35 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               21 (grid + NULL|self)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              36 (3)
+              LOAD_CONST              57 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+173           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                3 (main)
+              LOAD_CONST              14 (6)
+              LOAD_CONST               2 (('padding',))
+              CALL_KW                  2
+              STORE_FAST               9 (right_frame)
+
+174           LOAD_FAST                3 (main)
+              LOAD_ATTR               17 (add + NULL|self)
+              LOAD_FAST                9 (right_frame)
+              LOAD_CONST              38 (2)
+              LOAD_CONST              23 (('weight',))
+              CALL_KW                  2
+              POP_TOP
+
+177           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                9 (right_frame)
+              LOAD_CONST              85 ('Results Summary')
+              LOAD_CONST               1 (8)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST              10 (sum_frame)
+
+178           LOAD_FAST               10 (sum_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+180           LOAD_GLOBAL             22 (tk)
+              LOAD_ATTR               68 (Text)
+              PUSH_NULL
+              LOAD_FAST               10 (sum_frame)
+              LOAD_CONST              86 (7)
+              LOAD_CONST              87 (70)
+              LOAD_CONST              88 (('Consolas', 9))
+              LOAD_CONST              89 (('height', 'width', 'font'))
+              CALL_KW                  4
+              LOAD_FAST                0 (self)
+              STORE_ATTR              35 (summary_text)
+
+181           LOAD_FAST                0 (self)
+              LOAD_ATTR               70 (summary_text)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST               4 (('fill',))
+              CALL_KW                  1
+              POP_TOP
+
+182           LOAD_FAST                0 (self)
+              LOAD_ATTR               70 (summary_text)
+              LOAD_ATTR               73 (insert + NULL|self)
+              LOAD_CONST              90 ('1.0')
+              LOAD_CONST              91 ('Enter a reaction, feed, kinetics and conditions, then click Calculate.')
+              CALL                     2
+              POP_TOP
+
+185           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               18 (LabelFrame)
+              PUSH_NULL
+              LOAD_FAST                9 (right_frame)
+              LOAD_CONST              92 ('Profiles (embedded Matplotlib)')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              25 (('text', 'padding'))
+              CALL_KW                  3
+              STORE_FAST              11 (plot_frame)
+
+186           LOAD_FAST               11 (plot_frame)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              18 ('both')
+              LOAD_CONST              19 (True)
+              LOAD_CONST              20 (4)
+              LOAD_CONST              93 (('fill', 'expand', 'pady'))
+              CALL_KW                  3
+              POP_TOP
+
+188           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               74 (Notebook)
+              PUSH_NULL
+              LOAD_FAST               11 (plot_frame)
+              CALL                     1
+              LOAD_FAST                0 (self)
+              STORE_ATTR              38 (plot_notebook)
+
+189           LOAD_FAST                0 (self)
+              LOAD_ATTR               76 (plot_notebook)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST              18 ('both')
+              LOAD_CONST              19 (True)
+              LOAD_CONST              94 (('fill', 'expand'))
+              CALL_KW                  2
+              POP_TOP
+
+192           BUILD_MAP                0
+              LOAD_FAST                0 (self)
+              STORE_ATTR              39 (plot_frames)
+
+193           BUILD_MAP                0
+              LOAD_FAST                0 (self)
+              STORE_ATTR              40 (canvases)
+
+196           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR                2 (Frame)
+              PUSH_NULL
+              LOAD_FAST                9 (right_frame)
+              CALL                     1
+              STORE_FAST              12 (bottom)
+
+197           LOAD_FAST               12 (bottom)
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               3 ('x')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              26 (('fill', 'pady'))
+              CALL_KW                  2
+              POP_TOP
+
+199           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST               12 (bottom)
+              LOAD_CONST              95 ('Export Profiles (CSV)')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               82 (on_export_csv)
+              LOAD_CONST              41 (('text', 'command'))
+              CALL_KW                  3
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               8 ('left')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              15 (('side', 'padx'))
+              CALL_KW                  2
+              POP_TOP
+
+200           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST               12 (bottom)
+              LOAD_CONST              96 ('Save Current Plot')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               84 (on_save_plot)
+              LOAD_CONST              41 (('text', 'command'))
+              CALL_KW                  3
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               8 ('left')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              15 (('side', 'padx'))
+              CALL_KW                  2
+              POP_TOP
+
+201           LOAD_GLOBAL              0 (ttk)
+              LOAD_ATTR               10 (Button)
+              PUSH_NULL
+              LOAD_FAST               12 (bottom)
+              LOAD_CONST              97 ('Clear')
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               86 (clear_results)
+              LOAD_CONST              41 (('text', 'command'))
+              CALL_KW                  3
+              LOAD_ATTR                7 (pack + NULL|self)
+              LOAD_CONST               8 ('left')
+              LOAD_CONST              20 (4)
+              LOAD_CONST              15 (('side', 'padx'))
+              CALL_KW                  2
+              POP_TOP
+
+204           LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (root)
+              LOAD_ATTR               89 (after + NULL|self)
+              LOAD_CONST              98 (150)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR               30 (on_parse_reaction)
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- on_parse_reaction ---
+209           RESUME                   0
+
+210           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (reaction_str)
+              LOAD_ATTR                3 (get + NULL|self)
+              CALL                     0
+              LOAD_ATTR                5 (strip + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (rxn_str)
+
+211           LOAD_FAST                1 (rxn_str)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+212           RETURN_CONST             0 (None)
+
+214   L1:     LOAD_GLOBAL              7 (parse_reaction + NULL)
+              LOAD_FAST                1 (rxn_str)
+              CALL                     1
+              STORE_FAST               2 (stoich)
+
+215           LOAD_FAST                2 (stoich)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        24 (to L2)
+
+216           LOAD_GLOBAL              8 (messagebox)
+              LOAD_ATTR               10 (showerror)
+              PUSH_NULL
+              LOAD_CONST               1 ('Parse Error')
+              LOAD_CONST               2 ("Could not parse the reaction string.\nExample: 'C2H4 + H2O -> C2H5OH' or 'A + B -> C'")
+              CALL                     2
+              POP_TOP
+
+217           RETURN_CONST             0 (None)
+
+219   L2:     LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (_rebuild_species_ui + NULL|self)
+              LOAD_GLOBAL             15 (list + NULL)
+              LOAD_FAST                2 (stoich)
+              LOAD_ATTR               17 (keys + NULL|self)
+              CALL                     0
+              CALL                     1
+              CALL                     1
+              POP_TOP
+
+220           LOAD_FAST                0 (self)
+              LOAD_ATTR               19 (_rebuild_feed_ui + NULL|self)
+              LOAD_GLOBAL             15 (list + NULL)
+              LOAD_FAST                2 (stoich)
+              LOAD_ATTR               17 (keys + NULL|self)
+              CALL                     0
+              CALL                     1
+              CALL                     1
+              POP_TOP
+
+223           LOAD_FAST                0 (self)
+              LOAD_ATTR               21 (_update_deltaH_from_Hf_if_possible + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- on_lookup_all ---
+ 225            RESUME                   0
+
+ 227            LOAD_GLOBAL              1 (list + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (_species_vars)
+                LOAD_ATTR                5 (keys + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               1 (species)
+
+ 228            LOAD_FAST                1 (species)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        24 (to L1)
+
+ 229            LOAD_GLOBAL              6 (messagebox)
+                LOAD_ATTR                8 (showinfo)
+                PUSH_NULL
+                LOAD_CONST               1 ('No species')
+                LOAD_CONST               2 ('Parse a reaction first.')
+                CALL                     2
+                POP_TOP
+
+ 230            RETURN_CONST             3 (None)
+
+ 232    L1:     LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (root)
+                LOAD_ATTR               13 (config + NULL|self)
+                LOAD_CONST               4 ('watch')
+                LOAD_CONST               5 (('cursor',))
+                CALL_KW                  1
+                POP_TOP
+
+ 233            LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (root)
+                LOAD_ATTR               15 (update + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 235            NOP
+
+ 236    L2:     LOAD_GLOBAL             17 (lookup_species_list + NULL)
+                LOAD_FAST                1 (species)
+                CALL                     1
+                STORE_FAST               2 (lookups)
+
+ 237            LOAD_GLOBAL             19 (build_components_from_pubchem + NULL)
+                LOAD_FAST                2 (lookups)
+                CALL                     1
+                STORE_FAST               3 (comps)
+
+ 239            LOAD_FAST                3 (comps)
+                LOAD_ATTR               21 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+        L3:     FOR_ITER               221 (to L11)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST   69 (key, comp)
+
+ 240            LOAD_FAST_LOAD_FAST     64 (key, self)
+                LOAD_ATTR                2 (_species_vars)
+                CONTAINS_OP              0
+        L4:     POP_JUMP_IF_TRUE         2 (to L5)
+                JUMP_BACKWARD           22 (to L3)
+
+ 241    L5:     LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (_species_vars)
+                LOAD_FAST                4 (key)
+                BINARY_SUBSCR
+                STORE_FAST               6 (vars_)
+
+ 242            LOAD_FAST                5 (comp)
+                LOAD_ATTR               22 (mw)
+                POP_JUMP_IF_NONE        32 (to L6)
+
+ 243            LOAD_FAST                6 (vars_)
+                LOAD_CONST               6 ('mw')
+                BINARY_SUBSCR
+                LOAD_ATTR               25 (set + NULL|self)
+                LOAD_FAST                5 (comp)
+                LOAD_ATTR               22 (mw)
+                LOAD_CONST               7 ('.4g')
+                FORMAT_WITH_SPEC
+                CALL                     1
+                POP_TOP
+
+ 244    L6:     LOAD_FAST                5 (comp)
+                LOAD_ATTR               26 (Cp)
+                POP_JUMP_IF_NONE        32 (to L7)
+
+ 245            LOAD_FAST                6 (vars_)
+                LOAD_CONST               8 ('cp')
+                BINARY_SUBSCR
+                LOAD_ATTR               25 (set + NULL|self)
+                LOAD_FAST                5 (comp)
+                LOAD_ATTR               26 (Cp)
+                LOAD_CONST               7 ('.4g')
+                FORMAT_WITH_SPEC
+                CALL                     1
+                POP_TOP
+
+ 246    L7:     LOAD_FAST                5 (comp)
+                LOAD_ATTR               28 (Hf)
+                POP_JUMP_IF_NONE        32 (to L8)
+
+ 247            LOAD_FAST                6 (vars_)
+                LOAD_CONST               9 ('hf')
+                BINARY_SUBSCR
+                LOAD_ATTR               25 (set + NULL|self)
+                LOAD_FAST                5 (comp)
+                LOAD_ATTR               28 (Hf)
+                LOAD_CONST               7 ('.4g')
+                FORMAT_WITH_SPEC
+                CALL                     1
+                POP_TOP
+
+ 248    L8:     LOAD_FAST                5 (comp)
+                LOAD_ATTR               30 (formula)
+                TO_BOOL
+        L9:     POP_JUMP_IF_TRUE         2 (to L10)
+                JUMP_BACKWARD          191 (to L3)
+
+ 249   L10:     LOAD_FAST                6 (vars_)
+                LOAD_CONST              10 ('formula')
+                BINARY_SUBSCR
+                LOAD_ATTR               25 (set + NULL|self)
+                LOAD_FAST                5 (comp)
+                LOAD_ATTR               30 (formula)
+                CALL                     1
+                POP_TOP
+                JUMP_BACKWARD          223 (to L3)
+
+ 239   L11:     END_FOR
+                POP_TOP
+
+ 251            LOAD_FAST_LOAD_FAST     48 (comps, self)
+                STORE_ATTR              16 (current_components)
+
+ 252            LOAD_FAST                0 (self)
+                LOAD_ATTR               35 (_update_deltaH_from_Hf_if_possible + NULL|self)
+                CALL                     0
+                POP_TOP
+
+ 253            LOAD_GLOBAL              6 (messagebox)
+                LOAD_ATTR                8 (showinfo)
+                PUSH_NULL
+                LOAD_CONST              11 ('PubChem')
+                LOAD_CONST              12 ('Lookup complete. Review and override Cp / Hf with literature values!')
+                CALL                     2
+                POP_TOP
+
+ 257   L12:     LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (root)
+                LOAD_ATTR               13 (config + NULL|self)
+                LOAD_CONST              14 ('')
+                LOAD_CONST               5 (('cursor',))
+                CALL_KW                  1
+                POP_TOP
+                RETURN_CONST             3 (None)
+
+  --   L13:     PUSH_EXC_INFO
+
+ 254            LOAD_GLOBAL             36 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       42 (to L17)
+                STORE_FAST               7 (e)
+
+ 255   L14:     LOAD_GLOBAL              6 (messagebox)
+                LOAD_ATTR               38 (showerror)
+                PUSH_NULL
+                LOAD_CONST              13 ('PubChem Error')
+                LOAD_GLOBAL             41 (str + NULL)
+                LOAD_FAST                7 (e)
+                CALL                     1
+                CALL                     2
+                POP_TOP
+       L15:     POP_EXCEPT
+                LOAD_CONST               3 (None)
+                STORE_FAST               7 (e)
+                DELETE_FAST              7 (e)
+                JUMP_BACKWARD_NO_INTERRUPT 73 (to L12)
+
+  --   L16:     LOAD_CONST               3 (None)
+                STORE_FAST               7 (e)
+                DELETE_FAST              7 (e)
+                RERAISE                  1
+
+ 254   L17:     RERAISE                  0
+
+  --   L18:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L19:     PUSH_EXC_INFO
+
+ 257            LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (root)
+                LOAD_ATTR               13 (config + NULL|self)
+                LOAD_CONST              14 ('')
+                LOAD_CONST               5 (('cursor',))
+                CALL_KW                  1
+                POP_TOP
+                RERAISE                  0
+
+  --   L20:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L4 -> L13 [0]
+  L5 to L9 -> L13 [0]
+  L10 to L12 -> L13 [0]
+  L13 to L14 -> L18 [1] lasti
+  L14 to L15 -> L16 [1] lasti
+  L15 to L16 -> L19 [0]
+  L16 to L18 -> L18 [1] lasti
+  L18 to L19 -> L19 [0]
+  L19 to L20 -> L20 [1] lasti
+
+--- _rebuild_species_ui ---
+  --           MAKE_CELL                0 (self)
+
+ 259           RESUME                   0
+
+ 260           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_ATTR                3 (winfo_children + NULL|self)
+               CALL                     0
+               GET_ITER
+       L1:     FOR_ITER                19 (to L2)
+               STORE_FAST               2 (w)
+
+ 261           LOAD_FAST                2 (w)
+               LOAD_ATTR                5 (destroy + NULL|self)
+               CALL                     0
+               POP_TOP
+               JUMP_BACKWARD           21 (to L1)
+
+ 260   L2:     END_FOR
+               POP_TOP
+
+ 262           LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (_species_vars)
+               LOAD_ATTR                9 (clear + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 264           BUILD_LIST               0
+               LOAD_CONST               1 (('Species', 'Formula', 'MW (g/mol)', 'Cp (J/mol·K)', 'Hf (J/mol)', 'Lookup'))
+               LIST_EXTEND              1
+               STORE_FAST               3 (headers)
+
+ 265           LOAD_GLOBAL             11 (enumerate + NULL)
+               LOAD_FAST                3 (headers)
+               CALL                     1
+               GET_ITER
+       L3:     FOR_ITER                53 (to L4)
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST   69 (col, h)
+
+ 266           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               14 (Label)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST                5 (h)
+               LOAD_CONST               2 (('Segoe UI', 9, 'bold'))
+               LOAD_CONST               3 (('text', 'font'))
+               CALL_KW                  3
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_CONST               4 (0)
+               LOAD_FAST                4 (col)
+               LOAD_CONST               5 (3)
+               LOAD_CONST               6 (1)
+               LOAD_CONST               7 (('row', 'column', 'padx', 'pady'))
+               CALL_KW                  4
+               POP_TOP
+               JUMP_BACKWARD           55 (to L3)
+
+ 265   L4:     END_FOR
+               POP_TOP
+
+ 268           LOAD_GLOBAL             11 (enumerate + NULL)
+               LOAD_FAST                1 (species)
+               LOAD_CONST               6 (1)
+               LOAD_CONST               8 (('start',))
+               CALL_KW                  2
+               GET_ITER
+       L5:     EXTENDED_ARG             1
+               FOR_ITER               391 (to L6)
+               UNPACK_SEQUENCE          2
+               STORE_FAST_STORE_FAST  103 (row, sp)
+
+ 269           LOAD_GLOBAL             18 (tk)
+               LOAD_ATTR               20 (StringVar)
+               PUSH_NULL
+               LOAD_CONST               9 ('')
+               LOAD_CONST              10 (('value',))
+               CALL_KW                  1
+               STORE_FAST               8 (mw_var)
+
+ 270           LOAD_GLOBAL             18 (tk)
+               LOAD_ATTR               20 (StringVar)
+               PUSH_NULL
+               LOAD_CONST              11 ('80')
+               LOAD_CONST              10 (('value',))
+               CALL_KW                  1
+               STORE_FAST               9 (cp_var)
+
+ 271           LOAD_GLOBAL             18 (tk)
+               LOAD_ATTR               20 (StringVar)
+               PUSH_NULL
+               LOAD_CONST               9 ('')
+               LOAD_CONST              10 (('value',))
+               CALL_KW                  1
+               STORE_FAST              10 (hf_var)
+
+ 272           LOAD_GLOBAL             18 (tk)
+               LOAD_ATTR               20 (StringVar)
+               PUSH_NULL
+               LOAD_CONST               9 ('')
+               LOAD_CONST              10 (('value',))
+               CALL_KW                  1
+               STORE_FAST              11 (formula_var)
+
+ 275           LOAD_FAST_LOAD_FAST    137 (mw_var, cp_var)
+               LOAD_FAST_LOAD_FAST    171 (hf_var, formula_var)
+
+ 274           LOAD_CONST              12 (('mw', 'cp', 'hf', 'formula'))
+               BUILD_CONST_KEY_MAP      4
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (_species_vars)
+               LOAD_FAST                7 (sp)
+               STORE_SUBSCR
+
+ 278           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               14 (Label)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST                7 (sp)
+               LOAD_CONST              13 (('text',))
+               CALL_KW                  2
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST               4 (0)
+               LOAD_CONST               5 (3)
+               LOAD_CONST              14 (('row', 'column', 'padx'))
+               CALL_KW                  3
+               POP_TOP
+
+ 279           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               22 (Entry)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST               11 (formula_var)
+               LOAD_CONST              15 (10)
+               LOAD_CONST              16 (('textvariable', 'width'))
+               CALL_KW                  3
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST               6 (1)
+               LOAD_CONST              17 (('row', 'column'))
+               CALL_KW                  2
+               POP_TOP
+
+ 280           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               22 (Entry)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST                8 (mw_var)
+               LOAD_CONST              15 (10)
+               LOAD_CONST              16 (('textvariable', 'width'))
+               CALL_KW                  3
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST              18 (2)
+               LOAD_CONST              17 (('row', 'column'))
+               CALL_KW                  2
+               POP_TOP
+
+ 281           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               22 (Entry)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST                9 (cp_var)
+               LOAD_CONST              15 (10)
+               LOAD_CONST              16 (('textvariable', 'width'))
+               CALL_KW                  3
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST               5 (3)
+               LOAD_CONST              17 (('row', 'column'))
+               CALL_KW                  2
+               POP_TOP
+
+ 282           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               22 (Entry)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_FAST               10 (hf_var)
+               LOAD_CONST              19 (12)
+               LOAD_CONST              16 (('textvariable', 'width'))
+               CALL_KW                  3
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST              20 (4)
+               LOAD_CONST              17 (('row', 'column'))
+               CALL_KW                  2
+               POP_TOP
+
+ 284           LOAD_GLOBAL             12 (ttk)
+               LOAD_ATTR               24 (Button)
+               PUSH_NULL
+               LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (species_frame)
+               LOAD_CONST              21 ('PubChem')
+               LOAD_CONST              22 (8)
+
+ 285           LOAD_FAST                7 (sp)
+               BUILD_TUPLE              1
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              1
+               LOAD_CONST              23 (<code object <lambda> at 0x000001CBB604E6A0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 285>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               SET_FUNCTION_ATTRIBUTE   1 (defaults)
+
+ 284           LOAD_CONST              24 (('text', 'width', 'command'))
+               CALL_KW                  4
+               STORE_FAST              12 (btn)
+
+ 286           LOAD_FAST               12 (btn)
+               LOAD_ATTR               17 (grid + NULL|self)
+               LOAD_FAST                6 (row)
+               LOAD_CONST              25 (5)
+               LOAD_CONST              18 (2)
+               LOAD_CONST              14 (('row', 'column', 'padx'))
+               CALL_KW                  3
+               POP_TOP
+               EXTENDED_ARG             1
+               JUMP_BACKWARD          394 (to L5)
+
+ 268   L6:     END_FOR
+               POP_TOP
+
+ 288           LOAD_DEREF               0 (self)
+               LOAD_ATTR               27 (_update_deltaH_from_Hf_if_possible + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+Disassembly of <code object <lambda> at 0x000001CBB604E6A0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 285>:
+  --           COPY_FREE_VARS           1
+
+ 285           RESUME                   0
+               LOAD_DEREF               1 (self)
+               LOAD_ATTR                1 (_lookup_one_species + NULL|self)
+               LOAD_FAST                0 (s)
+               CALL                     1
+               RETURN_VALUE
+
+--- _lookup_one_species ---
+290           RESUME                   0
+
+291           LOAD_GLOBAL              1 (lookup_species + NULL)
+              LOAD_FAST                1 (species_key)
+              CALL                     1
+              STORE_FAST               2 (res)
+
+292           LOAD_FAST                2 (res)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               1 ('found')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_TRUE        28 (to L1)
+
+293           LOAD_GLOBAL              4 (messagebox)
+              LOAD_ATTR                6 (showwarning)
+              PUSH_NULL
+              LOAD_CONST               2 ('Not found')
+              LOAD_CONST               3 ("PubChem did not find '")
+              LOAD_FAST                1 (species_key)
+              FORMAT_SIMPLE
+              LOAD_CONST               4 ("'")
+              BUILD_STRING             3
+              CALL                     2
+              POP_TOP
+
+294           RETURN_CONST             0 (None)
+
+296   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                8 (_species_vars)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_FAST                1 (species_key)
+              CALL                     1
+              STORE_FAST               3 (vars_)
+
+297           LOAD_FAST                3 (vars_)
+              TO_BOOL
+              POP_JUMP_IF_FALSE      186 (to L5)
+
+298           LOAD_FAST                2 (res)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               5 ('mw')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       25 (to L2)
+
+299           LOAD_FAST                3 (vars_)
+              LOAD_CONST               5 ('mw')
+              BINARY_SUBSCR
+              LOAD_ATTR               11 (set + NULL|self)
+              LOAD_FAST                2 (res)
+              LOAD_CONST               5 ('mw')
+              BINARY_SUBSCR
+              LOAD_CONST               6 ('.4g')
+              FORMAT_WITH_SPEC
+              CALL                     1
+              POP_TOP
+
+300   L2:     LOAD_FAST                2 (res)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               7 ('cp')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       25 (to L3)
+
+301           LOAD_FAST                3 (vars_)
+              LOAD_CONST               7 ('cp')
+              BINARY_SUBSCR
+              LOAD_ATTR               11 (set + NULL|self)
+              LOAD_FAST                2 (res)
+              LOAD_CONST               7 ('cp')
+              BINARY_SUBSCR
+              LOAD_CONST               6 ('.4g')
+              FORMAT_WITH_SPEC
+              CALL                     1
+              POP_TOP
+
+302   L3:     LOAD_FAST                2 (res)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST               8 ('delta_hf')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       25 (to L4)
+
+303           LOAD_FAST                3 (vars_)
+              LOAD_CONST               9 ('hf')
+              BINARY_SUBSCR
+              LOAD_ATTR               11 (set + NULL|self)
+              LOAD_FAST                2 (res)
+              LOAD_CONST               8 ('delta_hf')
+              BINARY_SUBSCR
+              LOAD_CONST               6 ('.4g')
+              FORMAT_WITH_SPEC
+              CALL                     1
+              POP_TOP
+
+304   L4:     LOAD_FAST                2 (res)
+              LOAD_ATTR                3 (get + NULL|self)
+              LOAD_CONST              10 ('formula')
+              CALL                     1
+              TO_BOOL
+              POP_JUMP_IF_FALSE       23 (to L5)
+
+305           LOAD_FAST                3 (vars_)
+              LOAD_CONST              10 ('formula')
+              BINARY_SUBSCR
+              LOAD_ATTR               11 (set + NULL|self)
+              LOAD_FAST                2 (res)
+              LOAD_CONST              10 ('formula')
+              BINARY_SUBSCR
+              CALL                     1
+              POP_TOP
+
+307   L5:     LOAD_FAST                0 (self)
+              LOAD_ATTR               13 (_update_deltaH_from_Hf_if_possible + NULL|self)
+              CALL                     0
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- _rebuild_feed_ui ---
+309           RESUME                   0
+
+310           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (feed_frame)
+              LOAD_ATTR                3 (winfo_children + NULL|self)
+              CALL                     0
+              GET_ITER
+      L1:     FOR_ITER                19 (to L2)
+              STORE_FAST               2 (w)
+
+311           LOAD_FAST                2 (w)
+              LOAD_ATTR                5 (destroy + NULL|self)
+              CALL                     0
+              POP_TOP
+              JUMP_BACKWARD           21 (to L1)
+
+310   L2:     END_FOR
+              POP_TOP
+
+312           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (_feed_vars)
+              LOAD_ATTR                9 (clear + NULL|self)
+              CALL                     0
+              POP_TOP
+
+314           LOAD_GLOBAL             10 (ttk)
+              LOAD_ATTR               12 (Label)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (feed_frame)
+              LOAD_CONST               1 ('Species')
+              LOAD_CONST               2 (('Segoe UI', 9, 'bold'))
+              LOAD_CONST               3 (('text', 'font'))
+              CALL_KW                  3
+              LOAD_ATTR               15 (grid + NULL|self)
+              LOAD_CONST               4 (0)
+              LOAD_CONST               4 (0)
+              LOAD_CONST               5 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+315           LOAD_GLOBAL             10 (ttk)
+              LOAD_ATTR               12 (Label)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (feed_frame)
+              LOAD_CONST               6 ('F0 (mol/s)')
+              LOAD_CONST               2 (('Segoe UI', 9, 'bold'))
+              LOAD_CONST               3 (('text', 'font'))
+              CALL_KW                  3
+              LOAD_ATTR               15 (grid + NULL|self)
+              LOAD_CONST               4 (0)
+              LOAD_CONST               7 (1)
+              LOAD_CONST               5 (('row', 'column'))
+              CALL_KW                  2
+              POP_TOP
+
+317           LOAD_GLOBAL             17 (enumerate + NULL)
+              LOAD_FAST                1 (species)
+              LOAD_CONST               7 (1)
+              LOAD_CONST               8 (('start',))
+              CALL_KW                  2
+              GET_ITER
+      L3:     FOR_ITER               141 (to L6)
+              UNPACK_SEQUENCE          2
+              STORE_FAST_STORE_FAST   52 (i, sp)
+
+318           LOAD_GLOBAL             10 (ttk)
+              LOAD_ATTR               12 (Label)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (feed_frame)
+              LOAD_FAST                4 (sp)
+              LOAD_CONST               9 (('text',))
+              CALL_KW                  2
+              LOAD_ATTR               15 (grid + NULL|self)
+              LOAD_FAST                3 (i)
+              LOAD_CONST               4 (0)
+              LOAD_CONST              10 ('w')
+              LOAD_CONST              11 (4)
+              LOAD_CONST              12 (('row', 'column', 'sticky', 'padx'))
+              CALL_KW                  4
+              POP_TOP
+
+319           LOAD_GLOBAL             18 (tk)
+              LOAD_ATTR               20 (StringVar)
+              PUSH_NULL
+              LOAD_FAST                3 (i)
+              LOAD_CONST               7 (1)
+              COMPARE_OP              88 (bool(==))
+              POP_JUMP_IF_FALSE        2 (to L4)
+              LOAD_CONST              13 ('1.0')
+              JUMP_FORWARD             1 (to L5)
+      L4:     LOAD_CONST              14 ('0.0')
+      L5:     LOAD_CONST              15 (('value',))
+              CALL_KW                  1
+              STORE_FAST               5 (var)
+
+320           LOAD_FAST_LOAD_FAST     80 (var, self)
+              LOAD_ATTR                6 (_feed_vars)
+              LOAD_FAST                4 (sp)
+              STORE_SUBSCR
+
+321           LOAD_GLOBAL             10 (ttk)
+              LOAD_ATTR               22 (Entry)
+              PUSH_NULL
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (feed_frame)
+              LOAD_FAST                5 (var)
+              LOAD_CONST              16 (12)
+              LOAD_CONST              17 (('textvariable', 'width'))
+              CALL_KW                  3
+              LOAD_ATTR               15 (grid + NULL|self)
+              LOAD_FAST                3 (i)
+              LOAD_CONST               7 (1)
+              LOAD_CONST              11 (4)
+              LOAD_CONST              18 (('row', 'column', 'padx'))
+              CALL_KW                  3
+              POP_TOP
+              JUMP_BACKWARD          143 (to L3)
+
+317   L6:     END_FOR
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- _collect_components ---
+ 323            RESUME                   0
+
+ 324            BUILD_MAP                0
+                STORE_FAST               1 (comps)
+
+ 325            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (_species_vars)
+                LOAD_ATTR                3 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+        L1:     FOR_ITER               224 (to L14)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST   35 (sp, vars_)
+
+ 326            NOP
+
+ 327    L2:     LOAD_FAST                3 (vars_)
+                LOAD_CONST               1 ('mw')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR                7 (strip + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       28 (to L3)
+                LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                3 (vars_)
+                LOAD_CONST               1 ('mw')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                JUMP_FORWARD             1 (to L4)
+        L3:     LOAD_CONST               0 (None)
+        L4:     STORE_FAST               4 (mw)
+
+ 330    L5:     NOP
+
+ 331    L6:     LOAD_FAST                3 (vars_)
+                LOAD_CONST               2 ('cp')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR                7 (strip + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       28 (to L7)
+                LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                3 (vars_)
+                LOAD_CONST               2 ('cp')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                JUMP_FORWARD             1 (to L8)
+        L7:     LOAD_CONST               3 (80.0)
+        L8:     STORE_FAST               5 (cp)
+
+ 334    L9:     NOP
+
+ 335   L10:     LOAD_FAST                3 (vars_)
+                LOAD_CONST               4 ('hf')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR                7 (strip + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       28 (to L11)
+                LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                3 (vars_)
+                LOAD_CONST               4 ('hf')
+                BINARY_SUBSCR
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                JUMP_FORWARD             1 (to L12)
+       L11:     LOAD_CONST               0 (None)
+       L12:     STORE_FAST               6 (hf)
+
+ 339   L13:     LOAD_GLOBAL             13 (Component + NULL)
+                LOAD_FAST_LOAD_FAST     36 (sp, mw)
+                LOAD_FAST_LOAD_FAST     86 (cp, hf)
+                LOAD_CONST               5 (('name', 'mw', 'Cp', 'Hf'))
+                CALL_KW                  4
+                LOAD_FAST_LOAD_FAST     18 (comps, sp)
+                STORE_SUBSCR
+                JUMP_BACKWARD          226 (to L1)
+
+ 325   L14:     END_FOR
+                POP_TOP
+
+ 340            LOAD_FAST                1 (comps)
+                RETURN_VALUE
+
+  --   L15:     PUSH_EXC_INFO
+
+ 328            LOAD_GLOBAL             10 (ValueError)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        5 (to L17)
+                POP_TOP
+
+ 329            LOAD_CONST               0 (None)
+                STORE_FAST               4 (mw)
+       L16:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 170 (to L5)
+
+ 328   L17:     RERAISE                  0
+
+  --   L18:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L19:     PUSH_EXC_INFO
+
+ 332            LOAD_GLOBAL             10 (ValueError)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        5 (to L21)
+                POP_TOP
+
+ 333            LOAD_CONST               3 (80.0)
+                STORE_FAST               5 (cp)
+       L20:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 119 (to L9)
+
+ 332   L21:     RERAISE                  0
+
+  --   L22:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L23:     PUSH_EXC_INFO
+
+ 336            LOAD_GLOBAL             10 (ValueError)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        5 (to L25)
+                POP_TOP
+
+ 337            LOAD_CONST               0 (None)
+                STORE_FAST               6 (hf)
+       L24:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 68 (to L13)
+
+ 336   L25:     RERAISE                  0
+
+  --   L26:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L5 -> L15 [1]
+  L6 to L9 -> L19 [1]
+  L10 to L13 -> L23 [1]
+  L15 to L16 -> L18 [2] lasti
+  L17 to L18 -> L18 [2] lasti
+  L19 to L20 -> L22 [2] lasti
+  L21 to L22 -> L22 [2] lasti
+  L23 to L24 -> L26 [2] lasti
+  L25 to L26 -> L26 [2] lasti
+
+--- _update_deltaH_from_Hf_if_possible ---
+342           RESUME                   0
+
+343           LOAD_FAST                0 (self)
+              LOAD_ATTR                1 (_collect_components + NULL|self)
+              CALL                     0
+              STORE_FAST               1 (comps)
+
+344           LOAD_GLOBAL              3 (parse_reaction + NULL)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                4 (reaction_str)
+              LOAD_ATTR                7 (get + NULL|self)
+              CALL                     0
+              CALL                     1
+              STORE_FAST               2 (stoich)
+
+345           LOAD_FAST                2 (stoich)
+              TO_BOOL
+              POP_JUMP_IF_TRUE         1 (to L1)
+
+346           RETURN_CONST             0 (None)
+
+347   L1:     LOAD_GLOBAL              9 (Reaction + NULL)
+              LOAD_FAST                2 (stoich)
+              LOAD_CONST               1 (1)
+              LOAD_CONST               2 (0)
+              LOAD_CONST               2 (0)
+              LOAD_CONST               3 (('stoichiometry', 'k0', 'E', 'delta_H'))
+              CALL_KW                  4
+              STORE_FAST               3 (rxn)
+
+348           LOAD_FAST                3 (rxn)
+              LOAD_ATTR               11 (compute_delta_H_from_Hf + NULL|self)
+              LOAD_FAST                1 (comps)
+              CALL                     1
+              STORE_FAST               4 (delta)
+
+349           LOAD_FAST                4 (delta)
+              POP_JUMP_IF_NONE        30 (to L2)
+
+350           LOAD_FAST                0 (self)
+              LOAD_ATTR               12 (deltaH_var)
+              LOAD_ATTR               15 (set + NULL|self)
+              LOAD_FAST                4 (delta)
+              LOAD_CONST               4 ('.4g')
+              FORMAT_WITH_SPEC
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+349   L2:     RETURN_CONST             0 (None)
+
+--- _collect_inputs ---
+ 352            RESUME                   0
+
+ 354            LOAD_GLOBAL              1 (parse_reaction + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (reaction_str)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               1 (stoich)
+
+ 355            LOAD_FAST                1 (stoich)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        11 (to L1)
+
+ 356            LOAD_GLOBAL              7 (ValueError + NULL)
+                LOAD_CONST               1 ('Invalid reaction string')
+                CALL                     1
+                RAISE_VARARGS            1
+
+ 358    L1:     NOP
+
+ 359    L2:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               10 (k0_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               2 (k0)
+
+ 360            LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               12 (E_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               3 (E)
+
+ 361            LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               14 (deltaH_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST               4 (delta_H)
+
+ 365    L3:     LOAD_CONST               0 (None)
+                STORE_FAST               5 (orders)
+
+ 366            LOAD_FAST                0 (self)
+                LOAD_ATTR               16 (orders_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR               19 (strip + NULL|self)
+                CALL                     0
+                STORE_FAST               6 (ord_text)
+
+ 367            LOAD_FAST                6 (ord_text)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       80 (to L7)
+
+ 368            BUILD_MAP                0
+                STORE_FAST               5 (orders)
+
+ 369            LOAD_FAST                6 (ord_text)
+                LOAD_ATTR               21 (split + NULL|self)
+                CALL                     0
+                GET_ITER
+        L4:     FOR_ITER                58 (to L6)
+                STORE_FAST               7 (pair)
+
+ 370            LOAD_CONST               3 (':')
+                LOAD_FAST                7 (pair)
+                CONTAINS_OP              0
+                POP_JUMP_IF_TRUE         2 (to L5)
+                JUMP_BACKWARD           11 (to L4)
+
+ 371    L5:     LOAD_FAST                7 (pair)
+                LOAD_ATTR               21 (split + NULL|self)
+                LOAD_CONST               3 (':')
+                LOAD_CONST               4 (1)
+                CALL                     2
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST  137 (k, v)
+
+ 372            LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                9 (v)
+                CALL                     1
+                LOAD_FAST_LOAD_FAST     88 (orders, k)
+                LOAD_ATTR               19 (strip + NULL|self)
+                CALL                     0
+                STORE_SUBSCR
+                JUMP_BACKWARD           60 (to L4)
+
+ 369    L6:     END_FOR
+                POP_TOP
+
+ 374    L7:     LOAD_GLOBAL             23 (Reaction + NULL)
+
+ 375            LOAD_FAST                1 (stoich)
+
+ 376            LOAD_FAST                2 (k0)
+
+ 377            LOAD_FAST                3 (E)
+
+ 378            LOAD_FAST                4 (delta_H)
+
+ 379            LOAD_FAST                5 (orders)
+
+ 380            LOAD_FAST                0 (self)
+                LOAD_ATTR                2 (reaction_str)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+
+ 374            LOAD_CONST               5 (('stoichiometry', 'k0', 'E', 'delta_H', 'orders', 'name'))
+                CALL_KW                  6
+                STORE_FAST              10 (rxn)
+
+ 384            BUILD_MAP                0
+                STORE_FAST              11 (F0)
+
+ 385            LOAD_FAST                0 (self)
+                LOAD_ATTR               24 (_feed_vars)
+                LOAD_ATTR               27 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+        L8:     FOR_ITER                32 (to L9)
+                UNPACK_SEQUENCE          2
+                STORE_FAST_STORE_FAST  205 (sp, var)
+
+ 386            LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST               13 (var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                LOAD_FAST_LOAD_FAST    188 (F0, sp)
+                STORE_SUBSCR
+                JUMP_BACKWARD           34 (to L8)
+
+ 385    L9:     END_FOR
+                POP_TOP
+
+ 388            NOP
+
+ 389   L10:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               28 (T0_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              14 (T0)
+
+ 390            LOAD_FAST                0 (self)
+                LOAD_ATTR               30 (P0_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR               19 (strip + NULL|self)
+                CALL                     0
+                STORE_FAST              15 (P0_str)
+
+ 391            LOAD_FAST               15 (P0_str)
+                LOAD_ATTR               33 (replace + NULL|self)
+                LOAD_CONST               6 ('.')
+                LOAD_CONST               7 ('')
+                LOAD_CONST               4 (1)
+                CALL                     3
+                LOAD_ATTR               35 (isdigit + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       11 (to L11)
+                LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST               15 (P0_str)
+                CALL                     1
+                JUMP_FORWARD            13 (to L12)
+       L11:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST               15 (P0_str)
+                CALL                     1
+                LOAD_CONST               8 (101325)
+                BINARY_OP                5 (*)
+       L12:     STORE_FAST              16 (P0)
+
+ 395   L13:     LOAD_GLOBAL             39 (Feed + NULL)
+                LOAD_FAST_LOAD_FAST    190 (F0, T0)
+                LOAD_FAST               16 (P0)
+                LOAD_CONST              10 (('F0', 'T0', 'P0'))
+                CALL_KW                  3
+                STORE_FAST              17 (feed)
+
+ 398            LOAD_FAST                0 (self)
+                LOAD_ATTR               41 (_collect_components + NULL|self)
+                CALL                     0
+                STORE_FAST              18 (comps)
+
+ 399            LOAD_FAST               18 (comps)
+                LOAD_ATTR               27 (items + NULL|self)
+                CALL                     0
+                GET_ITER
+                LOAD_FAST_AND_CLEAR     12 (sp)
+                LOAD_FAST_AND_CLEAR     19 (c)
+                SWAP                     3
+       L14:     BUILD_MAP                0
+                SWAP                     2
+                GET_ITER
+       L15:     FOR_ITER                28 (to L17)
+                UNPACK_SEQUENCE          2
+                STORE_FAST              12 (sp)
+                STORE_FAST              19 (c)
+                LOAD_FAST               12 (sp)
+                LOAD_FAST               19 (c)
+                LOAD_ATTR               42 (Cp)
+                COPY                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE         2 (to L16)
+                POP_TOP
+                LOAD_CONST              11 (80.0)
+       L16:     MAP_ADD                  2
+                JUMP_BACKWARD           30 (to L15)
+       L17:     END_FOR
+                POP_TOP
+       L18:     STORE_FAST              20 (Cp)
+                STORE_FAST              12 (sp)
+                STORE_FAST              19 (c)
+
+ 402            LOAD_FAST                0 (self)
+                LOAD_ATTR               44 (mode_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                STORE_FAST              21 (mode)
+
+ 403            NOP
+
+ 404   L19:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               46 (targetX_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              22 (target_x)
+
+ 407   L20:     NOP
+
+ 408   L21:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               48 (maxV_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              23 (max_v)
+
+ 412   L22:     LOAD_CONST               0 (None)
+                STORE_FAST              24 (iso_T)
+
+ 413            LOAD_FAST                0 (self)
+                LOAD_ATTR               50 (iso_T_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                LOAD_ATTR               19 (strip + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       36 (to L24)
+
+ 414            NOP
+
+ 415   L23:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               50 (iso_T_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              24 (iso_T)
+
+ 419   L24:     LOAD_CONST              13 (0.0)
+                STORE_FAST              25 (alpha)
+
+ 420            LOAD_FAST                0 (self)
+                LOAD_ATTR               52 (pressure_drop_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                TO_BOOL
+                POP_JUMP_IF_FALSE       36 (to L26)
+
+ 421            NOP
+
+ 422   L25:     LOAD_GLOBAL              9 (float + NULL)
+                LOAD_FAST                0 (self)
+                LOAD_ATTR               54 (alpha_var)
+                LOAD_ATTR                5 (get + NULL|self)
+                CALL                     0
+                CALL                     1
+                STORE_FAST              25 (alpha)
+
+ 426   L26:     LOAD_GLOBAL             57 (PFRConfig + NULL)
+
+ 427            LOAD_FAST               21 (mode)
+
+ 428            LOAD_FAST               24 (iso_T)
+
+ 429            LOAD_CONST              15 (0)
+                LOAD_FAST               22 (target_x)
+                COPY                     1
+                TO_BOOL
+                POP_JUMP_IF_TRUE         2 (to L27)
+                POP_TOP
+                LOAD_CONST              15 (0)
+       L27:     SWAP                     2
+                COPY                     2
+                COMPARE_OP              18 (bool(<))
+                POP_JUMP_IF_FALSE        6 (to L28)
+                LOAD_CONST               4 (1)
+                COMPARE_OP              18 (bool(<))
+                POP_JUMP_IF_FALSE        5 (to L30)
+                JUMP_FORWARD             2 (to L29)
+       L28:     POP_TOP
+                JUMP_FORWARD             2 (to L30)
+       L29:     LOAD_FAST               22 (target_x)
+                JUMP_FORWARD             1 (to L31)
+       L30:     LOAD_CONST               0 (None)
+
+ 430   L31:     LOAD_FAST               23 (max_v)
+
+ 431            LOAD_FAST               25 (alpha)
+                LOAD_CONST              15 (0)
+                COMPARE_OP             148 (bool(>))
+                POP_JUMP_IF_FALSE        2 (to L32)
+                LOAD_CONST              16 ('simple_drop')
+                JUMP_FORWARD             1 (to L33)
+       L32:     LOAD_CONST              17 ('constant')
+
+ 432   L33:     LOAD_FAST               25 (alpha)
+
+ 426            LOAD_CONST              18 (('mode', 'isothermal_T', 'target_X', 'max_V', 'pressure_model', 'alpha'))
+                CALL_KW                  6
+                STORE_FAST              26 (cfg)
+
+ 435            LOAD_FAST               10 (rxn)
+                LOAD_FAST               17 (feed)
+                LOAD_FAST               20 (Cp)
+                LOAD_FAST               26 (cfg)
+                BUILD_TUPLE              4
+                RETURN_VALUE
+
+  --   L34:     PUSH_EXC_INFO
+
+ 362            LOAD_GLOBAL              6 (ValueError)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       12 (to L35)
+                POP_TOP
+
+ 363            LOAD_GLOBAL              7 (ValueError + NULL)
+                LOAD_CONST               2 ('k0, E and ΔH must be numbers')
+                CALL                     1
+                RAISE_VARARGS            1
+
+ 362   L35:     RERAISE                  0
+
+  --   L36:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L37:     PUSH_EXC_INFO
+
+ 392            LOAD_GLOBAL             36 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE        9 (to L39)
+                POP_TOP
+
+ 393            LOAD_CONST               9 ((400.0, 101325.0))
+                UNPACK_SEQUENCE          2
+                STORE_FAST              14 (T0)
+                STORE_FAST              16 (P0)
+       L38:     POP_EXCEPT
+                EXTENDED_ARG             1
+                JUMP_BACKWARD_NO_INTERRUPT 431 (to L13)
+
+ 392   L39:     RERAISE                  0
+
+  --   L40:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L41:     SWAP                     2
+                POP_TOP
+
+ 399            SWAP                     3
+                STORE_FAST              19 (c)
+                STORE_FAST              12 (sp)
+                RERAISE                  0
+
+  --   L42:     PUSH_EXC_INFO
+
+ 405            POP_TOP
+
+ 406            LOAD_CONST               0 (None)
+                STORE_FAST              22 (target_x)
+       L43:     POP_EXCEPT
+                EXTENDED_ARG             1
+                JUMP_BACKWARD_NO_INTERRUPT 303 (to L20)
+
+  --   L44:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L45:     PUSH_EXC_INFO
+
+ 409            POP_TOP
+
+ 410            LOAD_CONST              12 (50.0)
+                STORE_FAST              23 (max_v)
+       L46:     POP_EXCEPT
+                EXTENDED_ARG             1
+                JUMP_BACKWARD_NO_INTERRUPT 277 (to L22)
+
+  --   L47:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L48:     PUSH_EXC_INFO
+
+ 416            POP_TOP
+
+ 417   L49:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 201 (to L24)
+
+  --   L50:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L51:     PUSH_EXC_INFO
+
+ 423            POP_TOP
+
+ 424            LOAD_CONST              14 (0.05)
+                STORE_FAST              25 (alpha)
+       L52:     POP_EXCEPT
+                JUMP_BACKWARD_NO_INTERRUPT 141 (to L26)
+
+  --   L53:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L2 to L3 -> L34 [0]
+  L10 to L13 -> L37 [0]
+  L14 to L18 -> L41 [3]
+  L19 to L20 -> L42 [0]
+  L21 to L22 -> L45 [0]
+  L23 to L24 -> L48 [0]
+  L25 to L26 -> L51 [0]
+  L34 to L36 -> L36 [1] lasti
+  L37 to L38 -> L40 [1] lasti
+  L39 to L40 -> L40 [1] lasti
+  L42 to L43 -> L44 [1] lasti
+  L45 to L46 -> L47 [1] lasti
+  L48 to L49 -> L50 [1] lasti
+  L51 to L52 -> L53 [1] lasti
+
+--- on_calculate ---
+  --           MAKE_CELL                0 (self)
+               MAKE_CELL                3 (Cp)
+               MAKE_CELL                4 (cfg)
+               MAKE_CELL                5 (feed)
+               MAKE_CELL                6 (rxn)
+
+ 437           RESUME                   0
+
+ 438           NOP
+
+ 439   L1:     LOAD_DEREF               0 (self)
+               LOAD_ATTR                1 (_collect_inputs + NULL|self)
+               CALL                     0
+               UNPACK_SEQUENCE          4
+               STORE_DEREF              6 (rxn)
+               STORE_DEREF              5 (feed)
+               STORE_DEREF              3 (Cp)
+               STORE_DEREF              4 (cfg)
+
+ 444   L2:     LOAD_DEREF               0 (self)
+               LOAD_ATTR               10 (summary_text)
+               LOAD_ATTR               13 (delete + NULL|self)
+               LOAD_CONST               2 ('1.0')
+               LOAD_CONST               3 ('end')
+               CALL                     2
+               POP_TOP
+
+ 445           LOAD_DEREF               0 (self)
+               LOAD_ATTR               10 (summary_text)
+               LOAD_ATTR               15 (insert + NULL|self)
+               LOAD_CONST               2 ('1.0')
+               LOAD_CONST               4 ('Solving PFR... (GUI will stay responsive)')
+               CALL                     2
+               POP_TOP
+
+ 447           LOAD_FAST                3 (Cp)
+               LOAD_FAST                4 (cfg)
+               LOAD_FAST                5 (feed)
+               LOAD_FAST                6 (rxn)
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              5
+               LOAD_CONST               5 (<code object worker at 0x000001CBB60BCD30, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 447>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               STORE_FAST               2 (worker)
+
+ 454           LOAD_GLOBAL             16 (threading)
+               LOAD_ATTR               18 (Thread)
+               PUSH_NULL
+               LOAD_FAST                2 (worker)
+               LOAD_CONST               6 (True)
+               LOAD_CONST               7 (('target', 'daemon'))
+               CALL_KW                  2
+               LOAD_ATTR               21 (start + NULL|self)
+               CALL                     0
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  --   L3:     PUSH_EXC_INFO
+
+ 440           LOAD_GLOBAL              2 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       42 (to L7)
+               STORE_FAST               1 (e)
+
+ 441   L4:     LOAD_GLOBAL              4 (messagebox)
+               LOAD_ATTR                6 (showerror)
+               PUSH_NULL
+               LOAD_CONST               1 ('Input Error')
+               LOAD_GLOBAL              9 (str + NULL)
+               LOAD_FAST                1 (e)
+               CALL                     1
+               CALL                     2
+               POP_TOP
+
+ 442   L5:     POP_EXCEPT
+               LOAD_CONST               0 (None)
+               STORE_FAST               1 (e)
+               DELETE_FAST              1 (e)
+               RETURN_CONST             0 (None)
+
+  --   L6:     LOAD_CONST               0 (None)
+               STORE_FAST               1 (e)
+               DELETE_FAST              1 (e)
+               RERAISE                  1
+
+ 440   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L8 [1] lasti
+  L4 to L5 -> L6 [1] lasti
+  L6 to L8 -> L8 [1] lasti
+
+Disassembly of <code object worker at 0x000001CBB60BCD30, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 447>:
+  --           COPY_FREE_VARS           5
+               MAKE_CELL                0 (exc)
+               MAKE_CELL                1 (result)
+
+ 447           RESUME                   0
+
+ 448           NOP
+
+ 449   L1:     LOAD_GLOBAL              1 (solve_pfr + NULL)
+               LOAD_DEREF               5 (rxn)
+               LOAD_DEREF               4 (feed)
+               LOAD_DEREF               2 (Cp)
+               LOAD_DEREF               3 (cfg)
+               LOAD_CONST               1 (('Cp', 'config'))
+               CALL_KW                  4
+               STORE_DEREF              1 (result)
+
+ 450           LOAD_DEREF               6 (self)
+               LOAD_ATTR                2 (root)
+               LOAD_ATTR                5 (after + NULL|self)
+               LOAD_CONST               2 (0)
+               LOAD_FAST                1 (result)
+               LOAD_FAST                6 (self)
+               BUILD_TUPLE              2
+               LOAD_CONST               3 (<code object <lambda> at 0x000001CBB604F1E0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 450>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               CALL                     2
+               POP_TOP
+       L2:     RETURN_CONST             0 (None)
+
+  --   L3:     PUSH_EXC_INFO
+
+ 451           LOAD_GLOBAL              6 (Exception)
+               CHECK_EXC_MATCH
+               POP_JUMP_IF_FALSE       42 (to L7)
+               STORE_DEREF              0 (exc)
+
+ 452   L4:     LOAD_DEREF               6 (self)
+               LOAD_ATTR                2 (root)
+               LOAD_ATTR                5 (after + NULL|self)
+               LOAD_CONST               2 (0)
+               LOAD_FAST                0 (exc)
+               BUILD_TUPLE              1
+               LOAD_CONST               4 (<code object <lambda> at 0x000001CBB5F1FEE0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 452>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               CALL                     2
+               POP_TOP
+       L5:     POP_EXCEPT
+               LOAD_CONST               0 (None)
+               STORE_DEREF              0 (exc)
+               DELETE_DEREF             0 (exc)
+               RETURN_CONST             0 (None)
+
+  --   L6:     LOAD_CONST               0 (None)
+               STORE_DEREF              0 (exc)
+               DELETE_DEREF             0 (exc)
+               RERAISE                  1
+
+ 451   L7:     RERAISE                  0
+
+  --   L8:     COPY                     3
+               POP_EXCEPT
+               RERAISE                  1
+ExceptionTable:
+  L1 to L2 -> L3 [0]
+  L3 to L4 -> L8 [1] lasti
+  L4 to L5 -> L6 [1] lasti
+  L6 to L8 -> L8 [1] lasti
+
+Disassembly of <code object <lambda> at 0x000001CBB604F1E0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 450>:
+  --           COPY_FREE_VARS           2
+
+ 450           RESUME                   0
+               LOAD_DEREF               1 (self)
+               LOAD_ATTR                1 (_display_result + NULL|self)
+               LOAD_DEREF               0 (result)
+               CALL                     1
+               RETURN_VALUE
+
+Disassembly of <code object <lambda> at 0x000001CBB5F1FEE0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 452>:
+  --           COPY_FREE_VARS           1
+
+ 452           RESUME                   0
+               LOAD_GLOBAL              0 (messagebox)
+               LOAD_ATTR                2 (showerror)
+               PUSH_NULL
+               LOAD_CONST               1 ('Solve Error')
+               LOAD_GLOBAL              5 (str + NULL)
+               LOAD_DEREF               0 (exc)
+               CALL                     1
+               CALL                     2
+               RETURN_VALUE
+
+--- _display_result ---
+456           RESUME                   0
+
+457           LOAD_FAST_LOAD_FAST     16 (result, self)
+              STORE_ATTR               0 (current_result)
+
+460           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (summary_text)
+              LOAD_ATTR                5 (delete + NULL|self)
+              LOAD_CONST               1 ('1.0')
+              LOAD_CONST               2 ('end')
+              CALL                     2
+              POP_TOP
+
+461           BUILD_LIST               0
+              STORE_FAST               2 (lines)
+
+462           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST               3 ('Reaction: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR                8 (reaction)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       31 (to L1)
+              LOAD_GLOBAL             11 (pretty_stoich + NULL)
+              LOAD_FAST                1 (result)
+              LOAD_ATTR                8 (reaction)
+              LOAD_ATTR               12 (stoichiometry)
+              CALL                     1
+              JUMP_FORWARD             1 (to L2)
+      L1:     LOAD_CONST               4 ('')
+      L2:     FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     1
+              POP_TOP
+
+463           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST               5 ('Mode: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               14 (config)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       22 (to L3)
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               14 (config)
+              LOAD_ATTR               16 (mode)
+              JUMP_FORWARD             1 (to L4)
+      L3:     LOAD_CONST               6 ('unknown')
+      L4:     FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     1
+              POP_TOP
+
+464           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST               7 ('Required Volume: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               18 (final_V)
+              LOAD_CONST               8 ('.6g')
+              FORMAT_WITH_SPEC
+              LOAD_CONST               9 (' m³')
+              BUILD_STRING             3
+              CALL                     1
+              POP_TOP
+
+465           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST              10 ('Achieved Conversion (limiting ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               20 (limiting_species)
+              FORMAT_SIMPLE
+              LOAD_CONST              11 ('): ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               22 (final_X)
+              LOAD_CONST              12 ('.5f')
+              FORMAT_WITH_SPEC
+              BUILD_STRING             4
+              CALL                     1
+              POP_TOP
+
+466           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST              13 ('Outlet Temperature: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               24 (final_T)
+              LOAD_CONST              14 ('.2f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST              15 (' K')
+              BUILD_STRING             3
+              CALL                     1
+              POP_TOP
+
+467           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST              16 ('Outlet Pressure: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               26 (final_P)
+              LOAD_CONST              17 ('.1f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST              18 (' Pa (')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               26 (final_P)
+              LOAD_CONST              19 (101325)
+              BINARY_OP               11 (/)
+              LOAD_CONST              20 ('.4f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST              21 (' atm)')
+              BUILD_STRING             5
+              CALL                     1
+              POP_TOP
+
+468           LOAD_FAST                1 (result)
+              LOAD_ATTR               28 (Q)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       53 (to L8)
+
+469           LOAD_FAST                1 (result)
+              LOAD_ATTR               30 (total_Q)
+              STORE_FAST               3 (duty)
+
+470           LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST              22 ('Total Heat Duty: ')
+              LOAD_FAST                3 (duty)
+              LOAD_CONST              14 ('.2f')
+              FORMAT_WITH_SPEC
+              LOAD_CONST              23 (' W  (')
+              LOAD_FAST                3 (duty)
+              LOAD_CONST              24 (0)
+              COMPARE_OP              18 (bool(<))
+              POP_JUMP_IF_FALSE        2 (to L5)
+              LOAD_CONST              25 ('cooling required')
+              JUMP_FORWARD             9 (to L7)
+      L5:     LOAD_FAST                3 (duty)
+              LOAD_CONST              24 (0)
+              COMPARE_OP             148 (bool(>))
+              POP_JUMP_IF_FALSE        2 (to L6)
+              LOAD_CONST              26 ('heating required')
+              JUMP_FORWARD             1 (to L7)
+      L6:     LOAD_CONST              27 ('neutral')
+      L7:     FORMAT_SIMPLE
+              LOAD_CONST              28 (')')
+              BUILD_STRING             5
+              CALL                     1
+              POP_TOP
+
+471   L8:     LOAD_FAST                2 (lines)
+              LOAD_ATTR                7 (append + NULL|self)
+              LOAD_CONST              29 ('Success: ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               32 (success)
+              FORMAT_SIMPLE
+              LOAD_CONST              30 ('  — ')
+              LOAD_FAST                1 (result)
+              LOAD_ATTR               34 (message)
+              FORMAT_SIMPLE
+              BUILD_STRING             4
+              CALL                     1
+              POP_TOP
+
+472           LOAD_FAST                0 (self)
+              LOAD_ATTR                2 (summary_text)
+              LOAD_ATTR               37 (insert + NULL|self)
+              LOAD_CONST               1 ('1.0')
+              LOAD_CONST              31 ('\n')
+              LOAD_ATTR               39 (join + NULL|self)
+              LOAD_FAST                2 (lines)
+              CALL                     1
+              CALL                     2
+              POP_TOP
+
+475           LOAD_FAST                0 (self)
+              LOAD_ATTR               41 (_update_plots + NULL|self)
+              LOAD_FAST                1 (result)
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- _update_plots ---
+  --           MAKE_CELL                0 (self)
+               MAKE_CELL                1 (result)
+               MAKE_CELL                9 (V)
+
+ 477           RESUME                   0
+
+ 479           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (plot_notebook)
+               LOAD_ATTR                3 (tabs + NULL|self)
+               CALL                     0
+               GET_ITER
+       L1:     FOR_ITER                30 (to L2)
+               STORE_FAST               2 (tab)
+
+ 480           LOAD_DEREF               0 (self)
+               LOAD_ATTR                0 (plot_notebook)
+               LOAD_ATTR                5 (forget + NULL|self)
+               LOAD_FAST                2 (tab)
+               CALL                     1
+               POP_TOP
+               JUMP_BACKWARD           32 (to L1)
+
+ 479   L2:     END_FOR
+               POP_TOP
+
+ 481           LOAD_DEREF               0 (self)
+               LOAD_ATTR                6 (canvases)
+               LOAD_ATTR                9 (clear + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 483           LOAD_GLOBAL             10 (np)
+               LOAD_ATTR               12 (array)
+               PUSH_NULL
+               LOAD_DEREF               1 (result)
+               LOAD_ATTR               14 (V)
+               CALL                     1
+               STORE_DEREF              9 (V)
+
+ 485           LOAD_CONST              12 (('title', 'str'))
+               LOAD_FAST                9 (V)
+               LOAD_FAST                1 (result)
+               LOAD_FAST                0 (self)
+               BUILD_TUPLE              3
+               LOAD_CONST               1 (<code object add_plot_tab at 0x000001CBB6016E80, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 485>)
+               MAKE_FUNCTION
+               SET_FUNCTION_ATTRIBUTE   8 (closure)
+               SET_FUNCTION_ATTRIBUTE   4 (annotations)
+               STORE_FAST               3 (add_plot_tab)
+
+ 501           LOAD_CONST               2 (<code object plot_conv at 0x000001CBB60DCC00, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 501>)
+               MAKE_FUNCTION
+               STORE_FAST               4 (plot_conv)
+
+ 506           LOAD_CONST               3 (<code object plot_T at 0x000001CBB60E0BD0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 506>)
+               MAKE_FUNCTION
+               STORE_FAST               5 (plot_T)
+
+ 513           LOAD_CONST               4 (<code object plot_flows at 0x000001CBB5F98510, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 513>)
+               MAKE_FUNCTION
+               STORE_FAST               6 (plot_flows)
+
+ 524           LOAD_CONST               5 (<code object plot_heat at 0x000001CBB6324210, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 524>)
+               MAKE_FUNCTION
+               STORE_FAST               7 (plot_heat)
+
+ 532           LOAD_CONST               6 (<code object plot_rate at 0x000001CBB60DCEA0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 532>)
+               MAKE_FUNCTION
+               STORE_FAST               8 (plot_rate)
+
+ 537           LOAD_FAST                3 (add_plot_tab)
+               PUSH_NULL
+               LOAD_CONST               7 ('Conversion')
+               LOAD_FAST                4 (plot_conv)
+               CALL                     2
+               POP_TOP
+
+ 538           LOAD_FAST                3 (add_plot_tab)
+               PUSH_NULL
+               LOAD_CONST               8 ('Temperature')
+               LOAD_FAST                5 (plot_T)
+               CALL                     2
+               POP_TOP
+
+ 539           LOAD_FAST                3 (add_plot_tab)
+               PUSH_NULL
+               LOAD_CONST               9 ('Flows')
+               LOAD_FAST                6 (plot_flows)
+               CALL                     2
+               POP_TOP
+
+ 540           LOAD_FAST                3 (add_plot_tab)
+               PUSH_NULL
+               LOAD_CONST              10 ('Heat Duty')
+               LOAD_FAST                7 (plot_heat)
+               CALL                     2
+               POP_TOP
+
+ 541           LOAD_FAST                3 (add_plot_tab)
+               PUSH_NULL
+               LOAD_CONST              11 ('Rate')
+               LOAD_FAST                8 (plot_rate)
+               CALL                     2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+Disassembly of <code object add_plot_tab at 0x000001CBB6016E80, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 485>:
+  --           COPY_FREE_VARS           3
+
+ 485           RESUME                   0
+
+ 486           LOAD_GLOBAL              0 (ttk)
+               LOAD_ATTR                2 (Frame)
+               PUSH_NULL
+               LOAD_DEREF               8 (self)
+               LOAD_ATTR                4 (plot_notebook)
+               CALL                     1
+               STORE_FAST               2 (frame)
+
+ 487           LOAD_DEREF               8 (self)
+               LOAD_ATTR                4 (plot_notebook)
+               LOAD_ATTR                7 (add + NULL|self)
+               LOAD_FAST_LOAD_FAST     32 (frame, title)
+               LOAD_CONST               1 (('text',))
+               CALL_KW                  2
+               POP_TOP
+
+ 489           LOAD_GLOBAL              9 (Figure + NULL)
+               LOAD_CONST               2 ((6.5, 3.8))
+               LOAD_CONST               3 (100)
+               LOAD_CONST               4 (('figsize', 'dpi'))
+               CALL_KW                  2
+               STORE_FAST               3 (fig)
+
+ 490           LOAD_FAST                3 (fig)
+               LOAD_ATTR               11 (add_subplot + NULL|self)
+               LOAD_CONST               5 (111)
+               CALL                     1
+               STORE_FAST               4 (ax)
+
+ 491           LOAD_FAST                1 (plot_func)
+               PUSH_NULL
+               LOAD_FAST                4 (ax)
+               LOAD_DEREF               6 (V)
+               LOAD_DEREF               7 (result)
+               CALL                     3
+               POP_TOP
+
+ 492           LOAD_FAST                4 (ax)
+               LOAD_ATTR               13 (grid + NULL|self)
+               LOAD_CONST               6 (True)
+               LOAD_CONST               7 (0.3)
+               LOAD_CONST               8 (('alpha',))
+               CALL_KW                  2
+               POP_TOP
+
+ 493           LOAD_FAST                4 (ax)
+               LOAD_ATTR               15 (set_xlabel + NULL|self)
+               LOAD_CONST               9 ('V (m³)')
+               CALL                     1
+               POP_TOP
+
+ 495           LOAD_GLOBAL             17 (FigureCanvasTkAgg + NULL)
+               LOAD_FAST_LOAD_FAST     50 (fig, frame)
+               LOAD_CONST              10 (('master',))
+               CALL_KW                  2
+               STORE_FAST               5 (canvas)
+
+ 496           LOAD_FAST                5 (canvas)
+               LOAD_ATTR               19 (draw + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 497           LOAD_FAST                5 (canvas)
+               LOAD_ATTR               21 (get_tk_widget + NULL|self)
+               CALL                     0
+               LOAD_ATTR               23 (pack + NULL|self)
+               LOAD_CONST              11 ('both')
+               LOAD_CONST               6 (True)
+               LOAD_CONST              12 (('fill', 'expand'))
+               CALL_KW                  2
+               POP_TOP
+
+ 498           LOAD_GLOBAL             25 (NavigationToolbar2Tk + NULL)
+               LOAD_FAST_LOAD_FAST     82 (canvas, frame)
+               CALL                     2
+               LOAD_ATTR               23 (pack + NULL|self)
+               CALL                     0
+               POP_TOP
+
+ 499           LOAD_FAST                5 (canvas)
+               LOAD_DEREF               8 (self)
+               LOAD_ATTR               26 (canvases)
+               LOAD_FAST                0 (title)
+               STORE_SUBSCR
+               RETURN_CONST             0 (None)
+
+Disassembly of <code object plot_conv at 0x000001CBB60DCC00, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 501>:
+501           RESUME                   0
+
+502           LOAD_FAST                0 (ax)
+              LOAD_ATTR                1 (plot + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (V, res)
+              LOAD_ATTR                2 (X)
+              LOAD_CONST               1 ('b-')
+              LOAD_CONST               2 (2)
+              LOAD_CONST               3 (('lw',))
+              CALL_KW                  4
+              POP_TOP
+
+503           LOAD_FAST                0 (ax)
+              LOAD_ATTR                5 (set_ylabel + NULL|self)
+              LOAD_CONST               4 ('Conversion X')
+              CALL                     1
+              POP_TOP
+
+504           LOAD_FAST                0 (ax)
+              LOAD_ATTR                7 (set_title + NULL|self)
+              LOAD_CONST               5 ('Conversion Profile')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+Disassembly of <code object plot_T at 0x000001CBB60E0BD0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 506>:
+506           RESUME                   0
+
+507           LOAD_FAST                0 (ax)
+              LOAD_ATTR                1 (plot + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (V, res)
+              LOAD_ATTR                2 (T)
+              LOAD_CONST               1 ('r-')
+              LOAD_CONST               2 (2)
+              LOAD_CONST               3 (('lw',))
+              CALL_KW                  4
+              POP_TOP
+
+508           LOAD_FAST                0 (ax)
+              LOAD_ATTR                5 (axhline + NULL|self)
+              LOAD_FAST                2 (res)
+              LOAD_ATTR                6 (feed)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       22 (to L1)
+              LOAD_FAST                2 (res)
+              LOAD_ATTR                6 (feed)
+              LOAD_ATTR                8 (T0)
+              JUMP_FORWARD            14 (to L2)
+      L1:     LOAD_FAST                2 (res)
+              LOAD_ATTR                2 (T)
+              LOAD_CONST               4 (0)
+              BINARY_SUBSCR
+      L2:     LOAD_CONST               5 ('--')
+              LOAD_CONST               6 ('gray')
+              LOAD_CONST               7 ('T0')
+              LOAD_CONST               8 (('ls', 'color', 'label'))
+              CALL_KW                  4
+              POP_TOP
+
+509           LOAD_FAST                0 (ax)
+              LOAD_ATTR               11 (set_ylabel + NULL|self)
+              LOAD_CONST               9 ('T (K)')
+              CALL                     1
+              POP_TOP
+
+510           LOAD_FAST                0 (ax)
+              LOAD_ATTR               13 (set_title + NULL|self)
+              LOAD_CONST              10 ('Temperature Profile')
+              CALL                     1
+              POP_TOP
+
+511           LOAD_FAST                0 (ax)
+              LOAD_ATTR               15 (legend + NULL|self)
+              LOAD_CONST              11 (8)
+              LOAD_CONST              12 (('fontsize',))
+              CALL_KW                  1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+Disassembly of <code object plot_flows at 0x000001CBB5F98510, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 513>:
+ 513           RESUME                   0
+
+ 514           LOAD_FAST                2 (res)
+               LOAD_ATTR                0 (F)
+               TO_BOOL
+               POP_JUMP_IF_TRUE         1 (to L1)
+
+ 515           RETURN_CONST             0 (None)
+
+ 516   L1:     LOAD_GLOBAL              3 (list + NULL)
+               LOAD_FAST                2 (res)
+               LOAD_ATTR                0 (F)
+               LOAD_CONST               1 (0)
+               BINARY_SUBSCR
+               LOAD_ATTR                5 (keys + NULL|self)
+               CALL                     0
+               CALL                     1
+               STORE_FAST               3 (species)
+
+ 517           LOAD_FAST                3 (species)
+               GET_ITER
+       L2:     FOR_ITER                63 (to L7)
+               STORE_FAST               4 (sp)
+
+ 518           LOAD_FAST                2 (res)
+               LOAD_ATTR                0 (F)
+               GET_ITER
+               LOAD_FAST_AND_CLEAR      5 (f)
+               SWAP                     2
+       L3:     BUILD_LIST               0
+               SWAP                     2
+               GET_ITER
+       L4:     FOR_ITER                20 (to L5)
+               STORE_FAST_LOAD_FAST    85 (f, f)
+               LOAD_ATTR                7 (get + NULL|self)
+               LOAD_FAST                4 (sp)
+               LOAD_CONST               2 (0.0)
+               CALL                     2
+               LIST_APPEND              2
+               JUMP_BACKWARD           22 (to L4)
+       L5:     END_FOR
+               POP_TOP
+       L6:     STORE_FAST               6 (Fi)
+               STORE_FAST               5 (f)
+
+ 519           LOAD_FAST                0 (ax)
+               LOAD_ATTR                9 (plot + NULL|self)
+               LOAD_FAST_LOAD_FAST     22 (V, Fi)
+               LOAD_CONST               3 (1.6)
+               LOAD_FAST                4 (sp)
+               LOAD_CONST               4 (('lw', 'label'))
+               CALL_KW                  4
+               POP_TOP
+               JUMP_BACKWARD           65 (to L2)
+
+ 517   L7:     END_FOR
+               POP_TOP
+
+ 520           LOAD_FAST                0 (ax)
+               LOAD_ATTR               11 (set_ylabel + NULL|self)
+               LOAD_CONST               5 ('Fi (mol/s)')
+               CALL                     1
+               POP_TOP
+
+ 521           LOAD_FAST                0 (ax)
+               LOAD_ATTR               13 (set_title + NULL|self)
+               LOAD_CONST               6 ('Molar Flow Profiles')
+               CALL                     1
+               POP_TOP
+
+ 522           LOAD_FAST                0 (ax)
+               LOAD_ATTR               15 (legend + NULL|self)
+               LOAD_CONST               7 (7)
+               LOAD_CONST               8 (2)
+               LOAD_CONST               9 (('fontsize', 'ncol'))
+               CALL_KW                  2
+               POP_TOP
+               RETURN_CONST             0 (None)
+
+  --   L8:     SWAP                     2
+               POP_TOP
+
+ 518           SWAP                     2
+               STORE_FAST               5 (f)
+               RERAISE                  0
+ExceptionTable:
+  L3 to L6 -> L8 [3]
+
+Disassembly of <code object plot_heat at 0x000001CBB6324210, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 524>:
+524           RESUME                   0
+
+525           LOAD_FAST                2 (res)
+              LOAD_ATTR                0 (Q)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       86 (to L1)
+
+526           LOAD_FAST                0 (ax)
+              LOAD_ATTR                3 (plot + NULL|self)
+              LOAD_FAST                1 (V)
+              LOAD_GLOBAL              4 (np)
+              LOAD_ATTR                6 (array)
+              PUSH_NULL
+              LOAD_FAST                2 (res)
+              LOAD_ATTR                0 (Q)
+              CALL                     1
+              LOAD_CONST               1 (1000.0)
+              BINARY_OP               11 (/)
+              LOAD_CONST               2 ('m-')
+              LOAD_CONST               3 (2)
+              LOAD_CONST               4 (('lw',))
+              CALL_KW                  4
+              POP_TOP
+
+527           LOAD_FAST                0 (ax)
+              LOAD_ATTR                9 (set_ylabel + NULL|self)
+              LOAD_CONST               5 ('Cumulative Q (kW)')
+              CALL                     1
+              POP_TOP
+
+528           LOAD_FAST                0 (ax)
+              LOAD_ATTR               11 (set_title + NULL|self)
+              LOAD_CONST               6 ('Heat Duty Profile (isothermal)')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+530   L1:     LOAD_FAST                0 (ax)
+              LOAD_ATTR               13 (text + NULL|self)
+              LOAD_CONST               7 (0.5)
+              LOAD_CONST               7 (0.5)
+              LOAD_CONST               8 ('Adiabatic (Q=0)')
+              LOAD_CONST               9 ('center')
+              LOAD_FAST                0 (ax)
+              LOAD_ATTR               14 (transAxes)
+              LOAD_CONST              10 (('ha', 'transform'))
+              CALL_KW                  5
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+Disassembly of <code object plot_rate at 0x000001CBB60DCEA0, file "C:\Users\Fritz\Desktop\code-projects\pfr-reactor-sizer\pfrsizer\gui.py", line 532>:
+532           RESUME                   0
+
+533           LOAD_FAST                0 (ax)
+              LOAD_ATTR                1 (plot + NULL|self)
+              LOAD_FAST_LOAD_FAST     18 (V, res)
+              LOAD_ATTR                2 (r)
+              LOAD_CONST               1 ('g-')
+              LOAD_CONST               2 (2)
+              LOAD_CONST               3 (('lw',))
+              CALL_KW                  4
+              POP_TOP
+
+534           LOAD_FAST                0 (ax)
+              LOAD_ATTR                5 (set_ylabel + NULL|self)
+              LOAD_CONST               4 ('r (mol/m³/s)')
+              CALL                     1
+              POP_TOP
+
+535           LOAD_FAST                0 (ax)
+              LOAD_ATTR                7 (set_title + NULL|self)
+              LOAD_CONST               5 ('Reaction Rate Profile')
+              CALL                     1
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+--- on_export_csv ---
+ 543            RESUME                   0
+
+ 544            LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (current_result)
+                TO_BOOL
+                POP_JUMP_IF_TRUE        24 (to L1)
+
+ 545            LOAD_GLOBAL              2 (messagebox)
+                LOAD_ATTR                4 (showinfo)
+                PUSH_NULL
+                LOAD_CONST               1 ('No data')
+                LOAD_CONST               2 ('Run a calculation first.')
+                CALL                     2
+                POP_TOP
+
+ 546            RETURN_CONST             0 (None)
+
+ 548    L1:     LOAD_GLOBAL              6 (filedialog)
+                LOAD_ATTR                8 (asksaveasfilename)
+                PUSH_NULL
+                LOAD_CONST               3 ('.csv')
+                LOAD_CONST               4 (('CSV', '*.csv'))
+                BUILD_LIST               1
+                LOAD_CONST               5 (('defaultextension', 'filetypes'))
+                CALL_KW                  2
+                STORE_FAST               1 (path)
+
+ 549            LOAD_FAST                1 (path)
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L2)
+
+ 550            RETURN_CONST             0 (None)
+
+ 552    L2:     LOAD_FAST                0 (self)
+                LOAD_ATTR                0 (current_result)
+                STORE_FAST               2 (res)
+
+ 553            NOP
+
+ 554    L3:     LOAD_CONST               6 (0)
+                LOAD_CONST               0 (None)
+                IMPORT_NAME              5 (csv)
+                STORE_FAST               3 (csv)
+
+ 555            LOAD_GLOBAL             13 (open + NULL)
+                LOAD_FAST                1 (path)
+                LOAD_CONST               7 ('w')
+                LOAD_CONST               8 ('')
+                LOAD_CONST               9 ('utf-8')
+                LOAD_CONST              10 (('newline', 'encoding'))
+                CALL_KW                  4
+                BEFORE_WITH
+        L4:     STORE_FAST               4 (f)
+
+ 556            LOAD_FAST                3 (csv)
+                LOAD_ATTR               15 (writer + NULL|self)
+                LOAD_FAST                4 (f)
+                CALL                     1
+                STORE_FAST               5 (writer)
+
+ 557            BUILD_LIST               0
+                LOAD_CONST              11 (('V_m3', 'X', 'T_K', 'P_Pa'))
+                LIST_EXTEND              1
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               16 (F)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       29 (to L5)
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               16 (F)
+                LOAD_CONST               6 (0)
+                BINARY_SUBSCR
+                LOAD_ATTR               19 (keys + NULL|self)
+                CALL                     0
+                JUMP_FORWARD             1 (to L6)
+        L5:     BUILD_LIST               0
+        L6:     GET_ITER
+                LOAD_FAST_AND_CLEAR      6 (s)
+                SWAP                     2
+        L7:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L8:     FOR_ITER                 8 (to L9)
+                STORE_FAST               6 (s)
+                LOAD_CONST              12 ('F_')
+                LOAD_FAST                6 (s)
+                FORMAT_SIMPLE
+                BUILD_STRING             2
+                LIST_APPEND              2
+                JUMP_BACKWARD           10 (to L8)
+        L9:     END_FOR
+                POP_TOP
+       L10:     SWAP                     2
+                STORE_FAST               6 (s)
+                BINARY_OP                0 (+)
+                LOAD_CONST              13 ('r')
+                LOAD_CONST              14 ('Q_W')
+                BUILD_LIST               2
+                BINARY_OP                0 (+)
+                STORE_FAST               7 (header)
+
+ 558            LOAD_FAST                5 (writer)
+                LOAD_ATTR               21 (writerow + NULL|self)
+                LOAD_FAST                7 (header)
+                CALL                     1
+                POP_TOP
+
+ 559            LOAD_GLOBAL             23 (range + NULL)
+                LOAD_GLOBAL             25 (len + NULL)
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               26 (V)
+                CALL                     1
+                CALL                     1
+                GET_ITER
+       L11:     FOR_ITER               247 (to L19)
+                STORE_FAST               8 (i)
+
+ 560            LOAD_FAST                2 (res)
+                LOAD_ATTR               26 (V)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               28 (X)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               30 (T)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               32 (P)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                BUILD_LIST               4
+                STORE_FAST               9 (row)
+
+ 561            LOAD_FAST                2 (res)
+                LOAD_ATTR               16 (F)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       76 (to L16)
+
+ 562            LOAD_FAST_LOAD_FAST    146 (row, res)
+                LOAD_ATTR               16 (F)
+                LOAD_CONST               6 (0)
+                BINARY_SUBSCR
+                LOAD_ATTR               19 (keys + NULL|self)
+                CALL                     0
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      6 (s)
+                SWAP                     2
+       L12:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+       L13:     FOR_ITER                33 (to L14)
+                STORE_FAST_LOAD_FAST    98 (s, res)
+                LOAD_ATTR               16 (F)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                LOAD_ATTR               35 (get + NULL|self)
+                LOAD_FAST                6 (s)
+                LOAD_CONST               6 (0)
+                CALL                     2
+                LIST_APPEND              2
+                JUMP_BACKWARD           35 (to L13)
+       L14:     END_FOR
+                POP_TOP
+       L15:     SWAP                     2
+                STORE_FAST               6 (s)
+                BINARY_OP               13 (+=)
+                STORE_FAST               9 (row)
+
+ 563   L16:     LOAD_FAST_LOAD_FAST    146 (row, res)
+                LOAD_ATTR               36 (r)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               38 (Q)
+                TO_BOOL
+                POP_JUMP_IF_FALSE       40 (to L17)
+                LOAD_FAST                8 (i)
+                LOAD_GLOBAL             25 (len + NULL)
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               38 (Q)
+                CALL                     1
+                COMPARE_OP              18 (bool(<))
+                POP_JUMP_IF_FALSE       15 (to L17)
+                LOAD_FAST                2 (res)
+                LOAD_ATTR               38 (Q)
+                LOAD_FAST                8 (i)
+                BINARY_SUBSCR
+                JUMP_FORWARD             1 (to L18)
+       L17:     LOAD_CONST              15 (0.0)
+       L18:     BUILD_LIST               2
+                BINARY_OP               13 (+=)
+                STORE_FAST               9 (row)
+
+ 564            LOAD_FAST                5 (writer)
+                LOAD_ATTR               21 (writerow + NULL|self)
+                LOAD_FAST                9 (row)
+                CALL                     1
+                POP_TOP
+                JUMP_BACKWARD          249 (to L11)
+
+ 559   L19:     END_FOR
+                POP_TOP
+
+ 555   L20:     LOAD_CONST               0 (None)
+                LOAD_CONST               0 (None)
+                LOAD_CONST               0 (None)
+                CALL                     2
+                POP_TOP
+
+ 565   L21:     LOAD_GLOBAL              2 (messagebox)
+                LOAD_ATTR                4 (showinfo)
+                PUSH_NULL
+                LOAD_CONST              16 ('Exported')
+                LOAD_CONST              17 ('Saved profiles to ')
+                LOAD_FAST                1 (path)
+                FORMAT_SIMPLE
+                BUILD_STRING             2
+                CALL                     2
+                POP_TOP
+       L22:     RETURN_CONST             0 (None)
+
+  --   L23:     SWAP                     2
+                POP_TOP
+
+ 557            SWAP                     2
+                STORE_FAST               6 (s)
+                RERAISE                  0
+
+  --   L24:     SWAP                     2
+                POP_TOP
+
+ 562            SWAP                     2
+                STORE_FAST               6 (s)
+                RERAISE                  0
+
+ 555   L25:     PUSH_EXC_INFO
+                WITH_EXCEPT_START
+                TO_BOOL
+                POP_JUMP_IF_TRUE         1 (to L26)
+                RERAISE                  2
+       L26:     POP_TOP
+       L27:     POP_EXCEPT
+                POP_TOP
+                POP_TOP
+                JUMP_BACKWARD_NO_INTERRUPT 51 (to L21)
+
+  --   L28:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+       L29:     PUSH_EXC_INFO
+
+ 566            LOAD_GLOBAL             40 (Exception)
+                CHECK_EXC_MATCH
+                POP_JUMP_IF_FALSE       42 (to L33)
+                STORE_FAST              10 (e)
+
+ 567   L30:     LOAD_GLOBAL              2 (messagebox)
+                LOAD_ATTR               42 (showerror)
+                PUSH_NULL
+                LOAD_CONST              18 ('Export failed')
+                LOAD_GLOBAL             45 (str + NULL)
+                LOAD_FAST               10 (e)
+                CALL                     1
+                CALL                     2
+                POP_TOP
+       L31:     POP_EXCEPT
+                LOAD_CONST               0 (None)
+                STORE_FAST              10 (e)
+                DELETE_FAST             10 (e)
+                RETURN_CONST             0 (None)
+
+  --   L32:     LOAD_CONST               0 (None)
+                STORE_FAST              10 (e)
+                DELETE_FAST             10 (e)
+                RERAISE                  1
+
+ 566   L33:     RERAISE                  0
+
+  --   L34:     COPY                     3
+                POP_EXCEPT
+                RERAISE                  1
+ExceptionTable:
+  L3 to L4 -> L29 [0]
+  L4 to L7 -> L25 [1] lasti
+  L7 to L10 -> L23 [4]
+  L10 to L12 -> L25 [1] lasti
+  L12 to L15 -> L24 [5]
+  L15 to L20 -> L25 [1] lasti
+  L20 to L22 -> L29 [0]
+  L23 to L25 -> L25 [1] lasti
+  L25 to L27 -> L28 [3] lasti
+  L27 to L29 -> L29 [0]
+  L29 to L30 -> L34 [1] lasti
+  L30 to L31 -> L32 [1] lasti
+  L32 to L34 -> L34 [1] lasti
+
+--- on_save_plot ---
+569           RESUME                   0
+
+570           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (canvases)
+              TO_BOOL
+              POP_JUMP_IF_TRUE        24 (to L1)
+
+571           LOAD_GLOBAL              2 (messagebox)
+              LOAD_ATTR                4 (showinfo)
+              PUSH_NULL
+              LOAD_CONST               1 ('No plot')
+              LOAD_CONST               2 ('No plots available.')
+              CALL                     2
+              POP_TOP
+
+572           RETURN_CONST             0 (None)
+
+574   L1:     LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (plot_notebook)
+              LOAD_ATTR                9 (tab + NULL|self)
+              LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (plot_notebook)
+              LOAD_ATTR               11 (select + NULL|self)
+              CALL                     0
+              LOAD_CONST               3 ('text')
+              CALL                     2
+              STORE_FAST               1 (current)
+
+575           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (canvases)
+              LOAD_ATTR               13 (get + NULL|self)
+              LOAD_FAST                1 (current)
+              CALL                     1
+              STORE_FAST               2 (canvas)
+
+576           LOAD_FAST                2 (canvas)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       84 (to L3)
+
+577           LOAD_GLOBAL             14 (filedialog)
+              LOAD_ATTR               16 (asksaveasfilename)
+              PUSH_NULL
+              LOAD_CONST               4 ('.png')
+              LOAD_CONST               5 (('PNG', '*.png'))
+              BUILD_LIST               1
+              LOAD_CONST               6 (('defaultextension', 'filetypes'))
+              CALL_KW                  2
+              STORE_FAST               3 (path)
+
+578           LOAD_FAST                3 (path)
+              TO_BOOL
+              POP_JUMP_IF_FALSE       54 (to L2)
+
+579           LOAD_FAST                2 (canvas)
+              LOAD_ATTR               18 (figure)
+              LOAD_ATTR               21 (savefig + NULL|self)
+              LOAD_FAST                3 (path)
+              LOAD_CONST               7 (150)
+              LOAD_CONST               8 ('tight')
+              LOAD_CONST               9 (('dpi', 'bbox_inches'))
+              CALL_KW                  3
+              POP_TOP
+
+580           LOAD_GLOBAL              2 (messagebox)
+              LOAD_ATTR                4 (showinfo)
+              PUSH_NULL
+              LOAD_CONST              10 ('Saved')
+              LOAD_CONST              11 ('Plot saved to ')
+              LOAD_FAST                3 (path)
+              FORMAT_SIMPLE
+              BUILD_STRING             2
+              CALL                     2
+              POP_TOP
+              RETURN_CONST             0 (None)
+
+578   L2:     RETURN_CONST             0 (None)
+
+576   L3:     RETURN_CONST             0 (None)
+
+--- clear_results ---
+582           RESUME                   0
+
+583           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (summary_text)
+              LOAD_ATTR                3 (delete + NULL|self)
+              LOAD_CONST               1 ('1.0')
+              LOAD_CONST               2 ('end')
+              CALL                     2
+              POP_TOP
+
+584           LOAD_FAST                0 (self)
+              LOAD_ATTR                0 (summary_text)
+              LOAD_ATTR                5 (insert + NULL|self)
+              LOAD_CONST               1 ('1.0')
+              LOAD_CONST               3 ('Results cleared.')
+              CALL                     2
+              POP_TOP
+
+585           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (plot_notebook)
+              LOAD_ATTR                9 (tabs + NULL|self)
+              CALL                     0
+              GET_ITER
+      L1:     FOR_ITER                30 (to L2)
+              STORE_FAST               1 (tab)
+
+586           LOAD_FAST                0 (self)
+              LOAD_ATTR                6 (plot_notebook)
+              LOAD_ATTR               11 (forget + NULL|self)
+              LOAD_FAST                1 (tab)
+              CALL                     1
+              POP_TOP
+              JUMP_BACKWARD           32 (to L1)
+
+585   L2:     END_FOR
+              POP_TOP
+
+587           LOAD_CONST               0 (None)
+              LOAD_FAST                0 (self)
+              STORE_ATTR               6 (current_result)
+              RETURN_CONST             0 (None)
