@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pfrsizer"
-version = "0.1.0"
+version = "1.0.0"
 description = "Design and sizing tool for non-catalytic gas-phase plug-flow reactors (PFR) under isothermal and adiabatic conditions."
 readme = "README.md"
 requires-python = ">=3.10"

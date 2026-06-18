@@ -2,8 +2,23 @@
 Command-line interface for pfrsizer.
 """
 
-import argparse
 import sys
+from pathlib import Path
+
+# --- Robust support for running cli.py directly ----------------------------
+def _ensure_pfrsizer_on_path():
+    here = Path(__file__).resolve()
+    for ancestor in [here.parent] + list(here.parents):
+        if (ancestor / "pfrsizer" / "__init__.py").is_file():
+            if str(ancestor) not in sys.path:
+                sys.path.insert(0, str(ancestor))
+            return
+    sys.path.insert(0, str(here.parent.parent))
+
+_ensure_pfrsizer_on_path()
+# ---------------------------------------------------------------------------
+
+import argparse
 from typing import Optional
 
 try:
@@ -15,9 +30,9 @@ except ImportError:
     RICH_AVAILABLE = False
     rprint = print
 
-from .models import Reaction, Feed, PFRConfig
-from .solvers import solve_pfr_isothermal, solve_pfr_adiabatic
-from .plot import plot_profiles
+from pfrsizer.models import Reaction, Feed, PFRConfig
+from pfrsizer.solvers import solve_pfr
+from pfrsizer.plot import plot_profiles
 
 
 def _print_result(result, use_rich: bool = RICH_AVAILABLE):
@@ -29,7 +44,10 @@ def _print_result(result, use_rich: bool = RICH_AVAILABLE):
 
         table.add_row("Mode", result.config.mode)
         table.add_row("Limiting species", result.limiting_species)
-        table.add_row("Final Volume V (m³)", f"{result.final_V:.6g}")
+        table.add_row("Reactor Length L (m)", f"{result.final_z:.6g}")
+        table.add_row("Reactor Volume V (m³)", f"{result.final_V:.6g}")
+        table.add_row("Diameter (m)", f"{result.config.diameter if result.config else '?'}")
+        table.add_row("Cross-sectional area (m²)", f"{result.config.A_c if result.config else '?':.6f}")
         table.add_row("Final Conversion X", f"{result.final_X:.5f}")
         table.add_row("Final Temperature (K)", f"{result.final_T:.2f}")
         table.add_row("Final Pressure (Pa)", f"{result.final_P:.1f} ({result.final_P/101325:.4f} atm)")
@@ -49,7 +67,10 @@ def _print_result(result, use_rich: bool = RICH_AVAILABLE):
         print("\n=== PFR Result Summary ===")
         print(f"Mode:                {result.config.mode}")
         print(f"Limiting species:    {result.limiting_species}")
-        print(f"Final Volume (m³):   {result.final_V:.6g}")
+        print(f"Reactor Length (m):  {result.final_z:.6g}")
+        print(f"Reactor Volume (m³): {result.final_V:.6g}")
+        print(f"Diameter (m):        {result.config.diameter if result.config else '?'}")
+        print(f"Cross-section (m²):  {result.config.A_c if result.config else '?':.6f}")
         print(f"Final Conversion X:  {result.final_X:.5f}")
         print(f"Final T (K):         {result.final_T:.2f}")
         print(f"Final P (Pa):        {result.final_P:.1f}  ({result.final_P/101325:.4f} atm)")
@@ -80,10 +101,11 @@ def run_example(example: str = "A_to_B_isothermal"):
         cfg = PFRConfig(
             mode="isothermal",
             target_X=0.8,
-            max_V=50.0,
+            max_L=50.0,
+            diameter=0.1,
             pressure_model="constant",
         )
-        result = solve_pfr_isothermal(rxn, feed, cfg)
+        result = solve_pfr(rxn, feed, config=cfg)
         print("=== Example: Isothermal first-order A -> B ===")
         _print_result(result)
         plot_profiles(result, save_path=None)
@@ -109,10 +131,11 @@ def run_example(example: str = "A_to_B_isothermal"):
         cfg = PFRConfig(
             mode="adiabatic",
             target_X=0.80,
-            max_V=3.5,
+            max_L=50.0,
+            diameter=0.1,
             pressure_model="constant",
         )
-        result = solve_pfr_adiabatic(rxn, feed, Cp, cfg)
+        result = solve_pfr(rxn, feed, Cp=Cp, config=cfg)
         print("=== Example: Adiabatic A -> 2B (exothermic, volume change) ===")
         _print_result(result)
         plot_profiles(result)
@@ -131,11 +154,12 @@ def run_example(example: str = "A_to_B_isothermal"):
         feed = Feed(F0={"A": 0.8, "B": 0.0}, T0=400.0, P0=8*101325)
         cfg = PFRConfig(
             target_X=0.9,
-            max_V=25.0,
+            max_L=100.0,
+            diameter=0.1,
             pressure_model="simple_drop",
-            alpha=0.08,          # tune this to see effect
+            alpha=0.08,
         )
-        result = solve_pfr_isothermal(rxn, feed, cfg)
+        result = solve_pfr(rxn, feed, config=cfg)
         print("=== Example: Isothermal with pressure drop (alpha parameter) ===")
         _print_result(result)
         plot_profiles(result)
@@ -164,8 +188,6 @@ def main(argv: Optional[list] = None):
     )
     ex.add_argument("--no-plot", action="store_true", help="Do not show plots")
 
-    # Future: custom run could be added here with many flags, but examples are great for starters.
-
     args = parser.parse_args(argv)
 
     if args.command == "example":
@@ -173,7 +195,6 @@ def main(argv: Optional[list] = None):
         if result is None:
             sys.exit(1)
         if not args.no_plot:
-            # already plotted inside examples for convenience
             pass
 
     return 0

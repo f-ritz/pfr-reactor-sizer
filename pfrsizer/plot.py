@@ -1,5 +1,9 @@
 """
 Plotting utilities for PFR results.
+
+Most profiles are plotted against reactor length z (m).
+Temperature vs Conversion (T vs X) is also included (linear for adiabatic).
+Volume V (m^3) is shown on a secondary axis or in the title.
 """
 
 from typing import Optional
@@ -17,78 +21,104 @@ def plot_profiles(
 ):
     """
     Plot key profiles from a PFR simulation:
-      - Conversion X vs V
-      - Temperature T vs V (if adiabatic)
-      - Pressure P vs V (if variable)
-      - Molar flows vs V
-      - Reaction rate vs V
+      - Conversion X vs z
+      - Temperature T vs z
+      - Temperature vs Conversion (T vs X)  -- new; linear for adiabatic (energy balance)
+      - Pressure P vs z (if variable)
+      - Molar flows vs z
+      - Reaction rate vs z
     """
-    V = np.array(result.V)
-    if len(V) == 0:
+    z = np.array(result.z)
+    if len(z) == 0:
         print("No data to plot.")
         return
 
-    n_plots = 2
-    if result.config.mode == "adiabatic":
-        n_plots += 1
-    if result.config.pressure_model != "constant":
-        n_plots += 1
-
-    fig, axes = plt.subplots(2, 2, figsize=figsize)
+    fig, axes = plt.subplots(2, 3, figsize=figsize)
     axes = axes.flatten()
     ax_idx = 0
 
     # 1. Conversion
     ax = axes[ax_idx]
     ax_idx += 1
-    ax.plot(V, result.X, "b-", linewidth=2, label="Conversion X")
-    ax.set_xlabel("Reactor Volume V (m³)")
+    ax.plot(z, result.X, "b-", linewidth=2, label="Conversion X")
+    ax.set_xlabel("Reactor Length z (m)")
     ax.set_ylabel("Conversion X")
     ax.set_title("Conversion Profile")
     ax.grid(True, alpha=0.3)
     ax.legend(loc="lower right")
 
-    # 2. Temperature
-    if result.config.mode == "adiabatic":
-        ax = axes[ax_idx]
-        ax_idx += 1
-        ax.plot(V, result.T, "r-", linewidth=2, label="Temperature")
+    # 2. Temperature vs z
+    ax = axes[ax_idx]
+    ax_idx += 1
+    ax.plot(z, result.T, "r-", linewidth=2, label="Temperature")
+    if result.feed:
         ax.axhline(result.feed.T0, color="gray", linestyle="--", label=f"T0 = {result.feed.T0:.1f} K")
-        ax.set_xlabel("Reactor Volume V (m³)")
-        ax.set_ylabel("Temperature (K)")
-        ax.set_title("Temperature Profile (Adiabatic)")
-        ax.grid(True, alpha=0.3)
-        ax.legend()
+        ax.legend(fontsize=8)
+    ax.set_xlabel("Reactor Length z (m)")
+    ax.set_ylabel("Temperature (K)")
+    ax.set_title("Temperature Profile")
+    ax.grid(True, alpha=0.3)
 
-    # 3. Pressure
+    # 3. NEW: Temperature vs Conversion (T vs X)
+    # For adiabatic: approximately linear (energy balance line)
+    # For isothermal: flat
+    ax = axes[ax_idx]
+    ax_idx += 1
+    ax.plot(result.X, result.T, "g-", linewidth=2)
+    if result.feed:
+        ax.axhline(result.feed.T0, color="gray", linestyle="--", label=f"T0 = {result.feed.T0:.1f} K")
+        ax.legend(fontsize=8)
+    ax.set_xlabel("X")
+    ax.set_ylabel("T (K)")
+    ax.set_title("Temperature vs Conversion")
+    ax.grid(True, alpha=0.3)
+
+    # 4. Pressure (if enabled)
     if result.config.pressure_model != "constant":
         ax = axes[ax_idx]
         ax_idx += 1
-        ax.plot(V, [p / 101325 for p in result.P], "g-", linewidth=2)
-        ax.set_xlabel("Reactor Volume V (m³)")
+        ax.plot(z, [p / 101325 for p in result.P], "g-", linewidth=2)
+        ax.set_xlabel("Reactor Length z (m)")
         ax.set_ylabel("Pressure (atm)")
         ax.set_title("Pressure Profile")
         ax.grid(True, alpha=0.3)
 
-    # 4. Molar flows (all species)
+    # 5. Molar flows (all species)
     ax = axes[ax_idx]
     ax_idx += 1
-    species = sorted(result.F[0].keys())
-    for sp in species:
-        Fi = [f.get(sp, 0.0) for f in result.F]
-        ax.plot(V, Fi, linewidth=1.8, label=sp)
-    ax.set_xlabel("Reactor Volume V (m³)")
+    if result.F and len(result.F) > 0:
+        species = sorted(result.F[0].keys())
+        for sp in species:
+            Fi = [f.get(sp, 0.0) for f in result.F]
+            ax.plot(z, Fi, linewidth=1.8, label=sp)
+        ax.legend(loc="best", fontsize=8, ncol=2)
+    ax.set_xlabel("Reactor Length z (m)")
     ax.set_ylabel("Molar flow Fi (mol/s)")
     ax.set_title("Molar Flow Profiles")
     ax.grid(True, alpha=0.3)
-    ax.legend(loc="best", fontsize=8, ncol=2)
+
+    # 6. Rate
+    ax = axes[ax_idx]
+    ax_idx += 1
+    ax.plot(z, result.r, "m-", linewidth=2)
+    ax.set_xlabel("z (m)")
+    ax.set_ylabel("r (mol/m³/s)")
+    ax.set_title("Reaction Rate")
+    ax.grid(True, alpha=0.3)
 
     # Hide unused axes
     while ax_idx < len(axes):
         axes[ax_idx].axis("off")
         ax_idx += 1
 
-    fig.suptitle(f"PFR Simulation — {result.reaction.name} — {result.config.mode}", fontsize=14)
+    # Show geometry info in title
+    D = result.config.diameter if result.config and result.config.diameter else "?"
+    A_c = result.config.A_c if result.config else "?"
+    fig.suptitle(
+        f"PFR Simulation — {result.reaction.name} — {result.config.mode}\n"
+        f"D = {D} m, A_c = {A_c:.6f} m², L = {result.final_z:.3f} m, V = {result.final_V:.4f} m³",
+        fontsize=13
+    )
     fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
     if save_path:
@@ -108,22 +138,20 @@ def plot_rate_and_concentrations(
     figsize: tuple = (10, 4),
 ):
     """Plot reaction rate and outlet concentrations (or profiles)."""
-    V = np.array(result.V)
-    if len(V) == 0:
+    z = np.array(result.z)
+    if len(z) == 0:
         return
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
     # Rate
-    ax1.plot(V, result.r, "m-", linewidth=2)
-    ax1.set_xlabel("V (m³)")
+    ax1.plot(z, result.r, "m-", linewidth=2)
+    ax1.set_xlabel("z (m)")
     ax1.set_ylabel("Rate r (mol/m³/s)")
     ax1.set_title("Reaction Rate Profile")
     ax1.grid(True, alpha=0.3)
 
     # Final concentrations (bar)
-    # We compute concentrations along the reactor for one species or all
-    # For simplicity show final concentrations as horizontal bars
     C_out = result.outlet_concentrations()
     species = list(C_out.keys())
     concs = [C_out[s] for s in species]

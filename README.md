@@ -1,16 +1,34 @@
 # pfr-reactor-sizer
 
-A complete tool for **designing non-catalytic gas-phase plug-flow reactors (PFRs)**.
+**PFR Reactor Sizer** — A practical, self-contained tool for **sizing and analyzing non-catalytic gas-phase plug-flow reactors (PFRs)**.
 
-**Key features (as requested):**
-- Type **any chemical reaction** (e.g. `C2H4 + H2O -> C2H5OH` or `A + B -> C`)
-- **Automatic lookup** of chemicals in the **PubChem** database (MW, formula, rough Cp)
-- Supply your own kinetics from papers (k0, E, reaction orders, ΔH or Hf)
-- **Isothermal** mode with **automatic heat duty calculation** (how much heat you must add or remove to stay isothermal)
-- **Adiabatic** mode with full temperature profile
-- Full concentration, flow, T, P, X, and heat duty **profiles**
-- Modern **Windows-looking GUI** (Tkinter + ttk)
-- Packageable as a single **.exe** for any Windows PC (no Python required)
+All calculations are performed in **strict SI units**. See the prominent warning inside the application and the Units section below.
+
+## Key Features
+
+- Type **any reaction string** — symbolic (`A + B -> C`) or real chemicals (`C2H4 + H2O -> C2H5OH`, `2 NO + O2 -> 2 NO2`, etc.)
+- **Two example loaders**:
+  - Symbolic A → B (unspecified chemistry)
+  - Real chemicals (ethylene + water → ethanol)
+- **Kinetics options**:
+  - Arrhenius: enter k0 + E
+  - Given constant k (at operating temperature) — E forced to 0
+- **Reversible reactions**: toggle + enter concentration equilibrium constant Kc
+- **Thermodynamic data lookup**:
+  - Automatic search of **PubChem** (MW + basic info) **and NIST Chemistry Webbook** (Hf, Cp when available)
+  - Always verify/override with literature values
+- **Additional inert / diluent feeds**: freely add inerts; they participate in total flow, dilution, and adiabatic energy balance
+- **Isothermal vs Adiabatic** with only the relevant input fields shown for the selected mode
+- **Pressure drop**:
+  - Assume no pressure drop (P = constant = P0)
+  - Calculate detailed pressure drop (Fogler-style α model)
+- **Isothermal**: automatic heat duty Q calculation (how much heat to add/remove)
+- **Adiabatic**: full temperature profile from energy balance
+- Full profiles: X(z), T(z), P(z), F_i(z), r(z), V(z)
+- Modern native-looking **Tkinter GUI** (ttk) + embedded matplotlib plots + CSV export
+- **Single-file Windows EXE** (PyInstaller) — runs on any Windows PC without Python
+- Parameter help: "Design Equations Help" button explains the origin of every variable (Fogler-based design equations)
+- All units **SI** with clear warnings in the app
 
 ## Quick Start (GUI — Recommended)
 
@@ -24,17 +42,31 @@ Or after `pip install -e .`:
 pfrsizer-gui
 ```
 
-In the GUI:
-1. Type a reaction string and click **Parse**.
-2. Click **Lookup All in PubChem** (or per-species buttons).
-3. Fill/edit **Cp** and **Hf** (J/mol/K and J/mol) with literature values — PubChem data is only a starting point.
-4. Enter feed molar flows (mol/s), T0, P0.
-5. Enter kinetics (k0, E, ΔH_rx).
-6. Choose **Isothermal** (program will calculate required heat duty) or **Adiabatic**.
-7. Set target conversion and click the big **Calculate** button.
-8. View summary numbers + interactive embedded plots. Export CSV of all profiles.
+**IMPORTANT (SI Units)**: Every numerical input and all internal calculations use SI units:
+- Flows: mol/s
+- Lengths / diameter: m
+- Volume: m³
+- T: K
+- P: Pa (you may type `5` meaning 5 atm — it is auto-converted; other pressures must be full Pa)
+- Energies: J/mol and J/(mol·K)
+- E: J/mol
 
-The GUI stays responsive during the (sometimes slow) PubChem calls and ODE solves. Export CSV of all profiles.
+The GUI displays a bright warning banner and labels reinforce the units.
+
+### Basic GUI Workflow
+1. (Recommended) Click one of the **Load Example** buttons (symbolic A→B or real chemicals).
+2. Or type your reaction (e.g. `A -> B` or `C2H4 + H2O -> C2H5OH`) and click **Parse**.
+3. Click **Lookup All (PubChem + NIST)** — then review/override Cp and Hf with good literature values.
+4. Optionally add extra inert species with the "Add extra (inert)" control and set their feed flows.
+5. Choose **Kinetics model**: Arrhenius or Given constant k.
+6. For reversible reactions, check the box and supply Kc.
+7. Select **Isothermal** or **Adiabatic** — only the fields needed for that mode are shown.
+8. Choose pressure drop option (no drop vs calculate detailed).
+9. Fill feed conditions (T0, P0), target X, diameter, safety max length.
+10. Click **▶ Calculate / Size Reactor** (or Ctrl+Enter).
+11. Review summary + plots. Export CSV or PNG.
+
+The GUI remains responsive during network lookups and ODE integration.
 
 ## Building a Standalone Windows EXE
 
@@ -45,10 +77,11 @@ pip install pyinstaller
 python build_exe.py
 ```
 
-- Produces `dist/PFR_Reactor_Sizer.exe` (single file, windowed).
-- Can be copied to any other Windows PC — no Python or libraries needed.
-- Size is large (~150-250 MB) because it bundles the full scientific Python stack + matplotlib.
-- Edit `build_exe.py` (or the generated `.spec`) to add an icon.
+- Produces `dist/PFR_Reactor_Sizer.exe` (single-file, windowed app).
+- Copy to any Windows PC — no Python or dependencies required on the target machine.
+- The EXE is large (~150–250 MB) because it bundles the complete scientific Python stack.
+- **Custom icon**: Place an `icon.ico` file in the project root directory **before** running `build_exe.py`. The icon will automatically be embedded and will appear in the Windows taskbar and in the top-left corner of the application window.
+- If no `icon.ico` is present, the EXE is built without a custom icon.
 
 ## Goals (original + expanded)
 
@@ -59,18 +92,31 @@ python build_exe.py
 - Simple pressure drop model (optional)
 - Easy to use from Python or via command line
 
-## Features
+## Full Feature List
 
-- Type **any reaction string** (real chemicals or symbolic)
-- **PubChem lookup** for species (MW, formula, basic properties)
-- User-supplied kinetics + thermo from papers
-- **Isothermal** with full **heat duty calculation** (Q in/out required to hold T constant)
-- **Adiabatic** with temperature profile
-- Gas-phase volume change, ideal gas concentrations, optional pressure drop
-- Full profiles + summary
-- Windows Tkinter GUI (looks native) + embedded live plots
-- Export CSV profiles
-- PyInstaller-ready for standalone EXE
+- **Reaction input**: free-form parser supporting integer and decimal coefficients and any species names
+- **Two one-click example sets** (symbolic A→B and a realistic multi-species reaction)
+- **Kinetics flexibility**:
+  - Arrhenius form (k0 + activation energy E)
+  - Constant-k mode (user provides the value of k at the operating temperature)
+- **Reversible reactions** with user-provided concentration equilibrium constant Kc
+- **Dual database lookup**: PubChem (MW, identity) + NIST Chemistry Webbook (enthalpies of formation, heat capacities)
+- **Inert / diluent support**: add any number of extra non-reacting species to the feed; automatically included in mole balances, volume change, and energy balance
+- **Operating mode**:
+  - Isothermal (constant T, computed heat duty Q)
+  - Adiabatic (full coupled energy balance, T profile)
+  - UI dynamically shows/hides fields appropriate to the selected mode
+- **Pressure options**:
+  - No pressure drop (P = P0 throughout)
+  - Detailed pressure drop calculation using the lumped α model (Fogler formulation)
+- **Geometry**: specify diameter (m); length and volume are computed from the design equation integration
+- **Design equation basis**: all equations follow standard mole and energy balances in Fogler (dF_i/dz = ν_i r A_c, energy balance, ideal-gas variable-density flow)
+- **Parameter help**: in-app "Design Equations Help" window explains the origin and units of every field
+- Full profile plots + export (CSV of z, V, X, T, P, all F_i, r)
+- Professional Windows GUI with live status, threading for long operations
+- Completely self-contained EXE distributable
+
+See the in-app help for the exact equations used for each variable.
 
 ## Installation (for development / running from source)
 
@@ -114,7 +160,7 @@ rxn = Reaction(
 feed = Feed(
     F0={"A": 1.0, "B": 0.0},
     T0=350.0,                 # K
-    P0=5 * 101325,            # Pa (5 atm)
+    P0=5 * 101325,            # Pa (strict SI; use full Pa values in GUI)
 )
 
 # 3. Configuration
@@ -179,34 +225,40 @@ Volumetric flow (and thus concentrations) changes with total moles, temperature,
 Σ(Fⱼ Cpⱼ) dT/dV = -r · ΔH_rx
 ```
 
-Pressure drop (when enabled):
+Pressure drop:
 
-A simple volume-based model is provided:
+- **No pressure drop** → P = P0 constant (recommended for many lab-scale / low ΔP cases)
+- **Detailed pressure drop** → integrates dP/dz = −α × (F_T/F_T0) × (T/T0) × (P0/P)
 
-```
-dP/dV = -α · (F_T / F_T0) · (T / T0) · (P0 / P)
-```
+α is a user-supplied lumped parameter (units 1/m). For packed beds you can derive α from the Ergun equation. The integration uses length z as the independent variable, so concentration changes from pressure are captured.
 
-You control the magnitude with the `alpha` parameter in `PFRConfig`.
+## Units — CRITICAL (Strict SI Only)
 
-## Units (Important)
+**The entire application (GUI + core) performs every calculation using SI units exclusively.**
 
-All calculations use **consistent SI-derived units**:
+The GUI shows a permanent warning banner and labels on every field.
 
-| Quantity          | Unit          |
-|-------------------|---------------|
-| Molar flow F      | mol/s         |
-| Volume V          | m³            |
-| Temperature T     | K             |
-| Pressure P        | Pa            |
-| Concentration C   | mol/m³        |
-| Rate r            | mol/(m³·s)    |
-| ΔH_rx             | J/mol         |
-| Cp (heat capacity)| J/(mol·K)     |
-| Activation energy E | J/mol       |
-| k0 (rate constant pre-factor) | depends on order |
+| Quantity                    | Unit                  |
+|-----------------------------|-----------------------|
+| Molar flow F                | mol/s                 |
+| Length z, L, diameter D     | m                     |
+| Volume V                    | m³                    |
+| Temperature T / T0          | K                     |
+| Pressure P / P0             | Pa (strict SI only)   |
+| Concentration C             | mol/m³                |
+| Rate r                      | mol/(m³·s)            |
+| ΔH_rx , Hf                  | J/mol                 |
+| Cp                          | J/(mol·K)             |
+| E (activation energy)       | J/mol                 |
+| k0 / given k                | depends on order      |
+| α (pressure drop parameter) | 1/m                   |
+| Kc (reversible)             | (mol/m³)^(Δν)         |
 
-**R = 8.314 J/mol/K** (configurable on `PFRConfig`).
+R = 8.314 J mol⁻¹ K⁻¹ (fixed).
+
+**P0 must be in Pa (SI)**. Example: 101325 = 1 atm, 506625 = 5 atm. The GUI input field now labels it clearly as P0 (Pa) with no automatic conversion.
+
+Mis-entering units (e.g. typing atm values) will give physically meaningless results. All calculations are strict SI.
 
 ## Common Reaction Types
 
@@ -250,11 +302,73 @@ pip install -e ".[dev]"
 # or manually: pip install pytest black ruff
 ```
 
+## How to Use the EXE (No Python Required)
+
+1. Download the latest `PFR_Reactor_Sizer.exe` from the GitHub Releases.
+2. Double-click — it may take a few seconds to start the first time (large bundled Python runtime).
+3. The icon (if you supplied `icon.ico` at build time) will appear in the taskbar and window.
+4. Use exactly as the GUI instructions above. No installation or Python needed on the target machine.
+5. All the same warnings about SI units apply.
+
+## For Developers — Code Setup & Compilation
+
+```bash
+# Clone
+git clone ...
+cd pfr-reactor-sizer
+
+# Install in editable mode (includes all runtime deps)
+pip install -e .
+
+# Or minimal
+pip install -r requirements.txt
+```
+
+Run GUI from source:
+```bash
+python -m pfrsizer.gui
+# or
+python run_gui.py
+```
+
+Run CLI examples:
+```bash
+pfrsizer example A_to_B_isothermal
+```
+
+Build the EXE (Windows only):
+```powershell
+pip install pyinstaller
+python build_exe.py
+# Output: dist/PFR_Reactor_Sizer.exe
+```
+
+To include a custom taskbar/window icon:
+- Put `icon.ico` (recommended 256×256 or multi-resolution) in the repo root.
+- Run `build_exe.py` again. The build script auto-detects it.
+
+Lint / style (optional):
+```bash
+pip install -e ".[dev]"
+ruff check .
+black .
+```
+
+## Design Equation Summary (see in-app Help for full details)
+
+- Mole balance (length basis): `dF_i / dz = ν_i * r * A_c`
+- Ideal gas variable volume: `v = v0 * (Ft/Ft0)*(T/T0)*(P0/P)`
+- Adiabatic energy: `Σ Fj Cpj * dT/dz = -r * ΔH * Ac`
+- Isothermal heat duty obtained by post-integration of `Q = ∫ r ΔH dV`
+- Pressure drop (detailed): integrated with the α model above
+
+All derivations match standard textbook treatments (Fogler Ch. 1–4, 11–12).
+
 ## References & Theory
 
-- H. Scott Fogler, *Elements of Chemical Reaction Engineering*
-- Octave Levenspiel, *Chemical Reaction Engineering*
-- Standard mole balance + energy balance derivations for PFRs
+- H. Scott Fogler, *Elements of Chemical Reaction Engineering*, 5th ed.
+- Octave Levenspiel, *Chemical Reaction Engineering*, 3rd ed.
+- Standard mole/energy balances for ideal-gas PFRs
 
 ## License
 
@@ -262,4 +376,6 @@ MIT
 
 ---
 
-Contributions and feedback welcome. This is a work-in-progress tool focused on learning and practical sizing of homogeneous gas-phase PFRs.
+Contributions and feedback welcome. This tool is intended for learning, rapid scoping, and educational use in chemical reaction engineering. Always validate numbers against primary sources and pilot data before using for real equipment design.
+
+**Remember: SI units only — the software tells you this at every opportunity.**

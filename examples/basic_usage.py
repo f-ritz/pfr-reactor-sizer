@@ -34,7 +34,7 @@ def main():
         name="A->B isothermal"
     )
     feed1 = Feed(F0={"A": 1.0}, T0=350.0, P0=101325 * 4)
-    cfg1 = PFRConfig(target_X=0.85, max_V=60.0)
+    cfg1 = PFRConfig(target_X=0.85, max_L=60.0, diameter=0.1)
 
     res1 = solve_pfr_isothermal(rxn1, feed1, cfg1)
     print(f"   Required V for X=0.85: {res1.final_V:.4f} m³")
@@ -59,7 +59,7 @@ def main():
     )
     Cp = {"A": 115.0, "B": 82.0, "Inert": 29.5}  # J/mol K
 
-    cfg2 = PFRConfig(mode="adiabatic", target_X=0.80, max_V=3.5)
+    cfg2 = PFRConfig(mode="adiabatic", target_X=0.80, max_L=3.5, diameter=0.1)
 
     res2 = solve_pfr_adiabatic(rxn2, feed2, Cp, cfg2)
     print(f"   V for X=0.80: {res2.final_V:.4f} m³")
